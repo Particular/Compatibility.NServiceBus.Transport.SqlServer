@@ -22,7 +22,7 @@ public static class GeneratedVersionsSet
         var versions = resources.GetAllVersionsAsync(packageId, cache, NullLogger.Instance, CancellationToken.None).GetAwaiter().GetResult();
 
         // Get all minors
-        versions = versions.Where(v => !v.IsPrerelease && versionRange.Satisfies(v)).OrderBy(v => v);
+        versions = versions.Where(v => (!v.IsPrerelease || v.Release.StartsWith("rc.") || v.Release.StartsWith("beta.") || v.Release.StartsWith("alpha.")) && versionRange.Satisfies(v)).OrderBy(v => v);
 
         NuGetVersion last = null;
 
