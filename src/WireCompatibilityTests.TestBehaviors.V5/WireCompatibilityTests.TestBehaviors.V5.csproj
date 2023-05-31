@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <NoWarn>PS0018,PS0013</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WireCompatibilityTests.Messages\WireCompatibilityTests.Messages.csproj" />
+    <ProjectReference Include="..\TestAgent.Framework.V7\TestAgent.Framework.V7.csproj" />
+
+    <PackageReference Include="NServiceBus.SqlServer" Version="5.0.*" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
+
+</Project>
