@@ -10,7 +10,7 @@ using NuGet.Versioning;
 
 public static class GeneratedVersionsSet
 {
-    public static IEnumerable<object[]> Get(string packageId, string range)
+    public static IEnumerable<object[]> GetLatestMinors(string packageId, string range)
     {
         var versionRange = VersionRange.Parse(range);
         using var cache = new SourceCacheContext { NoCache = true };
