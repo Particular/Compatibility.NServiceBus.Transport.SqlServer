@@ -10,7 +10,7 @@ using NuGet.Versioning;
 using TestRunner;
 using TestSuite;
 
-public static class ScenarioRunner
+public static class SqlTransportScenarioRunner
 {
     public static long RunCounter;
     static readonly ObjectPool<long> Pool = new(() => Interlocked.Increment(ref RunCounter));

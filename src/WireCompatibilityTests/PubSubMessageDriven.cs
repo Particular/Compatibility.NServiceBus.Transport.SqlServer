@@ -15,7 +15,7 @@
         [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[4,6)")]
         public async Task Simple(NuGetVersion publisherVersion, NuGetVersion subscriberVersion)
         {
-            var result = await ScenarioRunner.Run(
+            var result = await SqlTransportScenarioRunner.Run(
                 "MessageDrivenPublisher",
                 "MessageDrivenSubscriber",
                 publisherVersion,
