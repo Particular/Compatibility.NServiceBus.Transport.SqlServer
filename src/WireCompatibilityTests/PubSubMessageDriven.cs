@@ -1,7 +1,6 @@
 ﻿namespace TestSuite
 {
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using NServiceBus;
     using NuGet.Versioning;
@@ -16,14 +15,12 @@
         [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[4,6)")]
         public async Task Simple(NuGetVersion publisherVersion, NuGetVersion subscriberVersion)
         {
-            using var cts = new CancellationTokenSource(Global.TestTimeout);
             var result = await ScenarioRunner.Run(
                 "MessageDrivenPublisher",
                 "MessageDrivenSubscriber",
                 publisherVersion,
                 subscriberVersion,
-                x => x.Count == 1,
-                cts.Token
+                x => x.Count == 1
                 )
                 .ConfigureAwait(false);
 

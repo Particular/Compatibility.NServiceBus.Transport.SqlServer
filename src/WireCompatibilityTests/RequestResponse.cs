@@ -1,7 +1,6 @@
 ﻿namespace TestSuite
 {
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using NServiceBus;
     using NuGet.Versioning;
@@ -23,8 +22,7 @@
         [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[4,)")]
         public async Task SingleSchema(NuGetVersion senderVersion, NuGetVersion receiverVersion)
         {
-            using var cts = new CancellationTokenSource(Global.TestTimeout);
-            var result = await ScenarioRunner.Run("Sender", "Receiver", senderVersion, receiverVersion, x => x.Count == 2, cts.Token).ConfigureAwait(false);
+            var result = await ScenarioRunner.Run("Sender", "Receiver", senderVersion, receiverVersion, x => x.Count == 2).ConfigureAwait(false);
 
             Assert.True(result.Succeeded);
 
@@ -47,8 +45,7 @@
         [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[6,)")]
         public async Task MultiSchema(NuGetVersion senderVersion, NuGetVersion receiverVersion)
         {
-            using var cts = new CancellationTokenSource(Global.TestTimeout);
-            var result = await ScenarioRunner.Run("SchemaSender", "SchemaReceiver", senderVersion, receiverVersion, x => x.Count == 2, cts.Token).ConfigureAwait(false);
+            var result = await ScenarioRunner.Run("SchemaSender", "SchemaReceiver", senderVersion, receiverVersion, x => x.Count == 2).ConfigureAwait(false);
 
             Assert.True(result.Succeeded);
 

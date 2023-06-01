@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using NServiceBus;
@@ -13,16 +14,19 @@ public static class ScenarioRunner
 {
     public static long RunCounter;
     static readonly ObjectPool<long> Pool = new(() => Interlocked.Increment(ref RunCounter));
+    static readonly TimeSpan TestTimeout = TimeSpan.FromSeconds(Debugger.IsAttached ? 600 : 30);
 
     public static async Task<TestExecutionResult> Run(
         string aTypeNameBehavior,
         string bTypeNameBehavior,
         SemanticVersion a,
         SemanticVersion b,
-        Func<List<AuditMessage>, bool> doneCallback,
-        CancellationToken cancellationToken = default
+        Func<List<AuditMessage>, bool> doneCallback
         )
     {
+        using var cts = new CancellationTokenSource(TestTimeout);
+        var cancellationToken = cts.Token;
+
         var platformSpecificAssemblies = new Dictionary<string, string>
         {
             ["Microsoft.Data.SqlClient"] = "net6.0",
