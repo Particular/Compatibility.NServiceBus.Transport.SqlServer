@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using NServiceBus.Pipeline;
 using NServiceBus.Transport;
+using TestSuite;
 
 public class StampVersionBehavior : Behavior<IOutgoingPhysicalMessageContext>
 {
@@ -17,7 +18,7 @@ public class StampVersionBehavior : Behavior<IOutgoingPhysicalMessageContext>
 
     public override Task Invoke(IOutgoingPhysicalMessageContext context, Func<Task> next)
     {
-        context.Headers["WireCompatVersion"] = versionString;
+        context.Headers[Keys.WireCompatVersion] = versionString;
         return next();
     }
 }
