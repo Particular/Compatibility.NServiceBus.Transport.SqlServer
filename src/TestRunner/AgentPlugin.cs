@@ -106,7 +106,7 @@
 
                 if (buildProcess.ExitCode != 0)
                 {
-                    var buildOutput = await buildProcess.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
+                    var buildOutput = await buildProcess.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
                     await Console.Out.WriteLineAsync(buildOutput).ConfigureAwait(false);
                     throw new Exception("Build failed");
                 }

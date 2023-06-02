@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <NoWarn>PS0018</NoWarn>
     <AssemblyName>NServiceBus.Compatibility.SqlServer.Tests</AssemblyName>
   </PropertyGroup>
 
