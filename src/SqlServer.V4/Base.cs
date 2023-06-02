@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using NServiceBus;
-using NServiceBus.AcceptanceTesting.Customization;
 using NServiceBus.Compatibility;
 
 class Base : ITestBehavior
@@ -11,20 +9,10 @@ class Base : ITestBehavior
     {
         var endpointName = GetType().Name;
         var config = new EndpointConfiguration(opts.ApplyUniqueRunPrefix(endpointName));
-        config.EnableInstallers();
-        config.UsePersistence<InMemoryPersistence>();
 
         var transport = config.UseTransport<SqlServerTransport>();
         transport.ConnectionString(opts.ConnectionString + $";App={endpointName}");
         transport.Transactions(TransportTransactionMode.ReceiveOnly);
-
-        config.Conventions().DefiningMessagesAs(t => t.GetInterfaces().Any(x => x.Name == "IMessage"));
-        config.Conventions().DefiningCommandsAs(t => t.GetInterfaces().Any(x => x.Name == "ICommand"));
-        config.Conventions().DefiningEventsAs(t => t.GetInterfaces().Any(x => x.Name == "IEvent"));
-
-        config.SendFailedMessagesTo(opts.ApplyUniqueRunPrefix("error"));
-        config.AuditProcessedMessagesTo(opts.AuditQueue);
-        config.AddHeaderToAllOutgoingMessages(nameof(opts.TestRunId), opts.TestRunId);
         Configure(opts, config, transport, transport.Routing());
 
         return config;

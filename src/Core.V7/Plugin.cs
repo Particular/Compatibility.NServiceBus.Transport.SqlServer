@@ -27,9 +27,23 @@ public class Plugin : IPlugin
         behavior = CreateBehavior(behaviorClass);
 
         var config = behavior.Configure(opts);
-        config.TypesToIncludeInScan(GetTypesToScan(behaviorClass).ToList());
+        config.EnableInstallers();
+        config.PurgeOnStartup(true);
+
+        config.UsePersistence<InMemoryPersistence>();
+
         config.Pipeline.Register(b => new StampVersionBehavior(b.Build<IDispatchMessages>()), "Stamps version");
         config.Pipeline.Register(new DiscardBehavior(opts.TestRunId), nameof(DiscardBehavior));
+
+        config.Conventions().DefiningMessagesAs(t => t.GetInterfaces().Any(x => x.Name == "IMessage"));
+        config.Conventions().DefiningCommandsAs(t => t.GetInterfaces().Any(x => x.Name == "ICommand"));
+        config.Conventions().DefiningEventsAs(t => t.GetInterfaces().Any(x => x.Name == "IEvent"));
+
+        config.SendFailedMessagesTo(opts.ApplyUniqueRunPrefix("error"));
+        config.AuditProcessedMessagesTo(opts.AuditQueue);
+        config.AddHeaderToAllOutgoingMessages(nameof(opts.TestRunId), opts.TestRunId);
+
+        config.TypesToIncludeInScan(GetTypesToScan(behaviorClass).ToList());
 
         instance = await Endpoint.Start(config).ConfigureAwait(false);
     }
