@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
-    <AssemblyName>NServiceBus.Compatibility.SqlServer.V8</AssemblyName>
+    <AssemblyName>NServiceBus.Compatibility.SqlServer.V7</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
