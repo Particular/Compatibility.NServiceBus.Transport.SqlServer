@@ -1,9 +1,7 @@
-﻿namespace WireCompatibilityTests;
-
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 
-public class ObjectPool<T>
+class ObjectPool<T>
 {
     readonly ConcurrentBag<T> _objects;
     readonly Func<T> _objectGenerator;

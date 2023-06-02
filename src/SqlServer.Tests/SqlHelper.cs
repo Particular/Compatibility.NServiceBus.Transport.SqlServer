@@ -1,9 +1,8 @@
 ﻿using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
-using TestSuite;
 
-public static class SqlHelper
+static class SqlHelper
 {
     public static async Task<int> ExecuteSql(string connectionString, string sql, CancellationToken cancellationToken = default)
     {
@@ -46,7 +45,7 @@ if(db_id('{database}') is null)
     }
     public static async Task DropTableIfExists(string connectionString, string tableName, string schema = "dbo", CancellationToken cancellationToken = default)
     {
-        await ExecuteSql(Global.ConnectionString, $"DROP TABLE IF EXISTS [{schema}].[{tableName}]", cancellationToken).ConfigureAwait(false);
+        await ExecuteSql(connectionString, $"DROP TABLE IF EXISTS [{schema}].[{tableName}]", cancellationToken).ConfigureAwait(false);
     }
 
     public static async Task DropTablesWithPrefix(string connectionString, string prefix, CancellationToken cancellationToken = default)

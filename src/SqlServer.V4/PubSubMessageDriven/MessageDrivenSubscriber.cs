@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using NServiceBus;
-using TestLogicApi;
+using NServiceBus.Compatibility;
 
 class MessageDrivenSubscriber : Base, ITestBehavior
 {

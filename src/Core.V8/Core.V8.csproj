@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>NServiceBus.Compatibility.Core.V8</AssemblyName>
+    <NoWarn>PS0018,PS0013</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

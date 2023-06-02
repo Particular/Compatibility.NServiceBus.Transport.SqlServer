@@ -1,16 +1,13 @@
-﻿namespace WireCompatibilityTests;
+﻿namespace NServiceBus.Compatibility.TestRunner.SqlServer;
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using NServiceBus;
 using NuGet.Versioning;
-using TestRunner;
-using TestSuite;
 
-public static class SqlTransportScenarioRunner
+static class SqlTransportScenarioRunner
 {
     public static long RunCounter;
     static readonly ObjectPool<long> Pool = new(() => Interlocked.Increment(ref RunCounter));
@@ -55,7 +52,7 @@ public static class SqlTransportScenarioRunner
             {
                 TransportTransactionMode = TransportTransactionMode.ReceiveOnly,
             };
-            auditSpyTransport.Subscriptions.SubscriptionTableName = new NServiceBus.Transport.SqlServer.SubscriptionTableName(opts.ApplyUniqueRunPrefix("SubscriptionRouting"));
+            auditSpyTransport.Subscriptions.SubscriptionTableName = new Transport.SqlServer.SubscriptionTableName(opts.ApplyUniqueRunPrefix("SubscriptionRouting"));
 
             var agents = new[]
             {

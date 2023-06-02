@@ -1,69 +1,69 @@
-﻿namespace TestRunner
+﻿namespace NServiceBus.Compatibility.TestRunner;
+
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Reflection;
+using System.Threading;
+using System.Diagnostics;
+using NuGet.Versioning;
+
+class AgentPlugin
 {
-    using System;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Reflection;
-    using System.Threading;
-    using System.Diagnostics;
-    using NuGet.Versioning;
+    static readonly AsyncDuplicateLock Locks = new AsyncDuplicateLock();
 
-    class AgentPlugin
-    {
-        static readonly AsyncDuplicateLock Locks = new AsyncDuplicateLock();
-
-        readonly string projectName;
-        readonly string behaviorType;
-        readonly Dictionary<string, string> platformSpecificAssemblies;
-        readonly string generatedProjectFolder;
-        readonly PluginOptions opts;
-        IPlugin plugin;
-        bool started;
-        readonly string behaviorCsProjFileName;
-        readonly SemanticVersion versionToTest;
-        readonly string transportPackageName;
+    readonly string projectName;
+    readonly string behaviorType;
+    readonly Dictionary<string, string> platformSpecificAssemblies;
+    readonly string generatedProjectFolder;
+    readonly PluginOptions opts;
+    IPlugin plugin;
+    bool started;
+    readonly string behaviorCsProjFileName;
+    readonly SemanticVersion versionToTest;
+    readonly string transportPackageName;
 
 #if NET7_0
-        const string TargetFramework = "net7.0";
+    const string TargetFramework = "net7.0";
 #endif
 
-        static readonly List<string> projects = new List<string>();
-        public AgentPlugin(
-            Dictionary<string, string> platformSpecificAssemblies,
-            SemanticVersion versionToTest,
-            string behaviorType,
-            string generatedProjectFolder,
-            PluginOptions opts)
+    static readonly List<string> projects = new List<string>();
+    public AgentPlugin(
+        Dictionary<string, string> platformSpecificAssemblies,
+        SemanticVersion versionToTest,
+        string behaviorType,
+        string generatedProjectFolder,
+        PluginOptions opts)
+    {
+        projectName = $"Agent.V{versionToTest.ToNormalizedString()}"; //generated project depends on downstream minor
+        this.versionToTest = versionToTest;
+        behaviorCsProjFileName = $"SqlServer.V{versionToTest.Major}"; //behaviors depend only on downstream major
+        this.behaviorType = $"{behaviorType}, NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}";
+        this.platformSpecificAssemblies = platformSpecificAssemblies;
+        this.generatedProjectFolder = generatedProjectFolder;
+        this.opts = opts;
+        transportPackageName = versionToTest.Major > 5 ? "NServiceBus.Transport.SqlServer" : "NServiceBus.SqlServer";
+    }
+
+
+    public async Task Compile(CancellationToken cancellationToken = default)
+    {
+        var disposable = await Locks.LockAsync(projectName, cancellationToken).ConfigureAwait(false);
+
+        using (disposable)
         {
-            projectName = $"Agent.V{versionToTest.ToNormalizedString()}"; //generated project depends on downstream minor
-            this.versionToTest = versionToTest;
-            behaviorCsProjFileName = $"SqlServer.V{versionToTest.Major}"; //behaviors depend only on downstream major
-            this.behaviorType = $"{behaviorType}, NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}";
-            this.platformSpecificAssemblies = platformSpecificAssemblies;
-            this.generatedProjectFolder = generatedProjectFolder;
-            this.opts = opts;
-            transportPackageName = versionToTest.Major > 5 ? "NServiceBus.Transport.SqlServer" : "NServiceBus.SqlServer";
-        }
-
-
-        public async Task Compile(CancellationToken cancellationToken = default)
-        {
-            var disposable = await Locks.LockAsync(projectName, cancellationToken).ConfigureAwait(false);
-
-            using (disposable)
+            var projectFolder = Path.Combine(generatedProjectFolder, projectName);
+            if (!Directory.Exists(projectFolder))
             {
-                var projectFolder = Path.Combine(generatedProjectFolder, projectName);
-                if (!Directory.Exists(projectFolder))
-                {
-                    Directory.CreateDirectory(projectFolder);
-                }
+                Directory.CreateDirectory(projectFolder);
+            }
 
-                var projectFilePath = Path.Combine(projectFolder, $"{projectName}.csproj");
-                if (!File.Exists(projectFilePath))
-                {
-                    await File.AppendAllTextAsync(projectFilePath, @$"<Project Sdk=""Microsoft.NET.Sdk"">
+            var projectFilePath = Path.Combine(projectFolder, $"{projectName}.csproj");
+            if (!File.Exists(projectFilePath))
+            {
+                await File.AppendAllTextAsync(projectFilePath, @$"<Project Sdk=""Microsoft.NET.Sdk"">
 
   <PropertyGroup>
     <TargetFramework>{TargetFramework}</TargetFramework>
@@ -85,100 +85,99 @@
 
 </Project>
 ", cancellationToken).ConfigureAwait(false);
-                }
+            }
 
-                var buildProcess = new Process();
-                buildProcess.StartInfo.FileName = @"dotnet";
-                buildProcess.StartInfo.Arguments = $"build \"{projectFilePath}\"";
+            var buildProcess = new Process();
+            buildProcess.StartInfo.FileName = @"dotnet";
+            buildProcess.StartInfo.Arguments = $"build \"{projectFilePath}\"";
 #if !DEBUG
                 buildProcess.StartInfo.Arguments += " --configuration Release";
 #endif
-                buildProcess.StartInfo.UseShellExecute = false;
-                buildProcess.StartInfo.RedirectStandardOutput = true;
-                buildProcess.StartInfo.RedirectStandardError = true;
-                buildProcess.StartInfo.RedirectStandardInput = true;
-                buildProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                buildProcess.StartInfo.CreateNoWindow = true;
+            buildProcess.StartInfo.UseShellExecute = false;
+            buildProcess.StartInfo.RedirectStandardOutput = true;
+            buildProcess.StartInfo.RedirectStandardError = true;
+            buildProcess.StartInfo.RedirectStandardInput = true;
+            buildProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            buildProcess.StartInfo.CreateNoWindow = true;
 
-                buildProcess.Start();
+            buildProcess.Start();
 
-                await buildProcess.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+            await buildProcess.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
 
-                if (buildProcess.ExitCode != 0)
-                {
-                    var buildOutput = await buildProcess.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-                    await Console.Out.WriteLineAsync(buildOutput).ConfigureAwait(false);
-                    throw new Exception("Build failed");
-                }
+            if (buildProcess.ExitCode != 0)
+            {
+                var buildOutput = await buildProcess.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+                await Console.Out.WriteLineAsync(buildOutput).ConfigureAwait(false);
+                throw new Exception("Build failed");
+            }
 
-                var folder = Path.GetDirectoryName(projectFilePath);
+            var folder = Path.GetDirectoryName(projectFilePath);
 
-                var coreAssemblyFilePattern = "NServiceBus.Compatibility.Core.V*.dll";
+            var coreAssemblyFilePattern = "NServiceBus.Compatibility.Core.V*.dll";
 #if DEBUG
-                var scanPath = $"{folder}/bin/Debug/{TargetFramework}/";
+            var scanPath = $"{folder}/bin/Debug/{TargetFramework}/";
 #else
                 var scanPath = $"{folder}/bin/Release/{TargetFramework}/";
 #endif
-                var agentDllPath = Directory.EnumerateFiles(scanPath, coreAssemblyFilePattern).Single();
+            var agentDllPath = Directory.EnumerateFiles(scanPath, coreAssemblyFilePattern).Single();
 
 
-                if (!File.Exists(agentDllPath))
+            if (!File.Exists(agentDllPath))
+            {
+                throw new FileNotFoundException();
+            }
+
+            var pluginAssembly = LoadPlugin(agentDllPath);
+            plugin = CreateCommands(pluginAssembly).Single();
+            projects.Add(projectName);
+        }
+    }
+
+    public async Task StartEndpoint(CancellationToken cancellationToken = default)
+    {
+        await plugin.StartEndpoint(behaviorType, opts, cancellationToken).ConfigureAwait(false);
+        started = true;
+    }
+
+    public Task StartTest(CancellationToken cancellationToken = default) => plugin.StartTest(cancellationToken);
+
+    public Task Stop(CancellationToken cancellationToken = default)
+    {
+        if (!started)
+        {
+            return Task.CompletedTask;
+        }
+
+        return plugin.Stop(cancellationToken);
+    }
+
+    Assembly LoadPlugin(string pluginLocation)
+    {
+        var loadContext = new PluginLoadContext(pluginLocation, platformSpecificAssemblies);
+
+        return loadContext.LoadFromAssemblyName(AssemblyName.GetAssemblyName(pluginLocation));
+    }
+
+    static IEnumerable<IPlugin> CreateCommands(Assembly assembly)
+    {
+        int count = 0;
+
+        foreach (Type type in assembly.GetTypes())
+        {
+            if (typeof(IPlugin).IsAssignableFrom(type))
+            {
+                if (Activator.CreateInstance(type) is IPlugin result)
                 {
-                    throw new FileNotFoundException();
-                }
-
-                var pluginAssembly = LoadPlugin(agentDllPath);
-                plugin = CreateCommands(pluginAssembly).Single();
-                projects.Add(projectName);
-            }
-        }
-
-        public async Task StartEndpoint(CancellationToken cancellationToken = default)
-        {
-            await plugin.StartEndpoint(behaviorType, opts, cancellationToken).ConfigureAwait(false);
-            started = true;
-        }
-
-        public Task StartTest(CancellationToken cancellationToken = default) => plugin.StartTest(cancellationToken);
-
-        public Task Stop(CancellationToken cancellationToken = default)
-        {
-            if (!started)
-            {
-                return Task.CompletedTask;
-            }
-
-            return plugin.Stop(cancellationToken);
-        }
-
-        Assembly LoadPlugin(string pluginLocation)
-        {
-            var loadContext = new PluginLoadContext(pluginLocation, platformSpecificAssemblies);
-
-            return loadContext.LoadFromAssemblyName(AssemblyName.GetAssemblyName(pluginLocation));
-        }
-
-        static IEnumerable<IPlugin> CreateCommands(Assembly assembly)
-        {
-            int count = 0;
-
-            foreach (Type type in assembly.GetTypes())
-            {
-                if (typeof(IPlugin).IsAssignableFrom(type))
-                {
-                    if (Activator.CreateInstance(type) is IPlugin result)
-                    {
-                        count++;
-                        yield return result;
-                    }
+                    count++;
+                    yield return result;
                 }
             }
+        }
 
-            if (count == 0)
-            {
-                string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
-                throw new ApplicationException($"Can't find any type which implements '{typeof(IPlugin)}' in '{assembly}' from '{assembly.Location}'.\nAvailable types: {availableTypes}");
-            }
+        if (count == 0)
+        {
+            string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
+            throw new ApplicationException($"Can't find any type which implements '{typeof(IPlugin)}' in '{assembly}' from '{assembly.Location}'.\nAvailable types: {availableTypes}");
         }
     }
 }

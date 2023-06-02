@@ -1,19 +1,18 @@
-﻿namespace TestRunner
+﻿namespace NServiceBus.Compatibility.TestRunner;
+
+using System;
+using System.Collections.Generic;
+
+public class AuditMessage
 {
-    using System;
-    using System.Collections.Generic;
-
-    public class AuditMessage
+    public AuditMessage(string id, Dictionary<string, string> headers, ReadOnlyMemory<byte> body)
     {
-        public AuditMessage(string id, Dictionary<string, string> headers, ReadOnlyMemory<byte> body)
-        {
-            Id = id;
-            Headers = headers;
-            Body = body;
-        }
-
-        public ReadOnlyMemory<byte> Body { get; }
-        public Dictionary<string, string> Headers { get; }
-        public string Id { get; }
+        Id = id;
+        Headers = headers;
+        Body = body;
     }
+
+    public ReadOnlyMemory<byte> Body { get; }
+    public Dictionary<string, string> Headers { get; }
+    public string Id { get; }
 }

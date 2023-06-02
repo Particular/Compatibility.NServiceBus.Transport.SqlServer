@@ -1,61 +1,60 @@
-﻿namespace TestAgent.Framework
+﻿namespace NServiceBus.Compatibility;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using NServiceBus;
+using NServiceBus.AcceptanceTesting.Customization;
+using NServiceBus.Transport;
+
+public class Plugin : IPlugin
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
-    using NServiceBus;
-    using NServiceBus.AcceptanceTesting.Customization;
-    using NServiceBus.Transport;
-    using TestLogicApi;
+    IEndpointInstance instance;
+    ITestBehavior behavior;
 
-    public class Plugin : IPlugin
+    public async Task StartEndpoint(
+        string behaviorClassName,
+        PluginOptions opts,
+        CancellationToken cancellationToken = default)
     {
-        IEndpointInstance instance;
-        ITestBehavior behavior;
+        var behaviorClass = Type.GetType(behaviorClassName, true);
 
-        public async Task StartEndpoint(
-            string behaviorClassName,
-            PluginOptions opts,
-            CancellationToken cancellationToken = default)
-        {
-            var behaviorClass = Type.GetType(behaviorClassName, true);
+        Console.Out.WriteLine($">> Creating {behaviorClass}");
 
-            Console.Out.WriteLine($">> Creating {behaviorClass}");
+        behavior = (ITestBehavior)Activator.CreateInstance(behaviorClass);
 
-            behavior = (ITestBehavior)Activator.CreateInstance(behaviorClass);
+        var config = behavior.Configure(opts);
+        config.TypesToIncludeInScan(GetTypesToScan(behaviorClass).ToList());
+        config.Pipeline.Register(b => new StampVersionBehavior(b.GetRequiredService<IMessageDispatcher>()), "Stamps version");
+        config.Pipeline.Register(new DiscardBehavior(opts.TestRunId), nameof(DiscardBehavior));
 
-            var config = behavior.Configure(opts);
-            config.TypesToIncludeInScan(GetTypesToScan(behaviorClass).ToList());
-            config.Pipeline.Register(b => new StampVersionBehavior(b.GetRequiredService<IMessageDispatcher>()), "Stamps version");
-
-            instance = await Endpoint.Start(config, cancellationToken).ConfigureAwait(false);
-        }
-
-        IEnumerable<Type> GetTypesToScan(Type behaviorType)
-        {
-            yield return behaviorType;
-            foreach (var nested in behaviorType.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic))
-            {
-                yield return nested;
-            }
-
-            if (behaviorType.BaseType != null)
-            {
-                var baseTypes = GetTypesToScan(behaviorType.BaseType);
-                foreach (Type type in baseTypes)
-                {
-                    yield return type;
-                }
-            }
-        }
-
-        public Task StartTest(CancellationToken cancellationToken = default) =>
-            behavior.Execute(instance, cancellationToken);
-
-        public Task Stop(CancellationToken cancellationToken = default) => instance.Stop(cancellationToken);
+        instance = await Endpoint.Start(config, cancellationToken).ConfigureAwait(false);
     }
+
+    IEnumerable<Type> GetTypesToScan(Type behaviorType)
+    {
+        yield return behaviorType;
+        foreach (var nested in behaviorType.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic))
+        {
+            yield return nested;
+        }
+
+        if (behaviorType.BaseType != null)
+        {
+            var baseTypes = GetTypesToScan(behaviorType.BaseType);
+            foreach (Type type in baseTypes)
+            {
+                yield return type;
+            }
+        }
+    }
+
+    public Task StartTest(CancellationToken cancellationToken = default) =>
+        behavior.Execute(instance, cancellationToken);
+
+    public Task Stop(CancellationToken cancellationToken = default) => instance.Stop(cancellationToken);
 }

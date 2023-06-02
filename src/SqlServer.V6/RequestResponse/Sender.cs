@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using NServiceBus;
-using TestLogicApi;
+using NServiceBus.Compatibility;
 
 class Sender : Base, ITestBehavior
 {

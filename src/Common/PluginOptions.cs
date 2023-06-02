@@ -1,4 +1,6 @@
-﻿public class PluginOptions
+﻿namespace NServiceBus.Compatibility;
+
+public class PluginOptions
 {
     public string? AuditQueue { get; set; }
 

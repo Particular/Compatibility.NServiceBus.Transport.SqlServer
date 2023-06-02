@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 
-public sealed class AsyncDuplicateLock
+sealed class AsyncDuplicateLock
 {
     sealed class RefCounted<T>
     {

@@ -6,7 +6,7 @@ using NServiceBus.AcceptanceTesting;
 using NServiceBus.Pipeline;
 using NServiceBus.Transport;
 using NServiceBus.Transport.SQLServer;
-using TestLogicApi;
+using NServiceBus.Compatibility;
 
 class MessageDrivenPublisher : Base, ITestBehavior
 {

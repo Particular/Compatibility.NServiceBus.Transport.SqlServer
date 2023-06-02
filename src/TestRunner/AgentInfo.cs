@@ -1,25 +1,24 @@
-﻿namespace TestRunner
+﻿namespace NServiceBus.Compatibility.TestRunner;
+
+using NuGet.Versioning;
+
+public class AgentInfo
 {
-    using NuGet.Versioning;
+    public SemanticVersion Version { get; set; }
+    public string Behavior { get; set; }
+    public PluginOptions BehaviorParameters { get; set; }
 
-    public class AgentInfo
+    public static AgentInfo Create(
+        string behavior,
+        SemanticVersion version,
+        PluginOptions opts
+        )
     {
-        public SemanticVersion Version { get; set; }
-        public string Behavior { get; set; }
-        public PluginOptions BehaviorParameters { get; set; }
-
-        public static AgentInfo Create(
-            string behavior,
-            SemanticVersion version,
-            PluginOptions opts
-            )
+        return new AgentInfo
         {
-            return new AgentInfo
-            {
-                Behavior = behavior,
-                Version = version,
-                BehaviorParameters = opts
-            };
-        }
+            Behavior = behavior,
+            Version = version,
+            BehaviorParameters = opts
+        };
     }
 }

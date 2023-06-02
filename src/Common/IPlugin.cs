@@ -1,4 +1,6 @@
-﻿public interface IPlugin
+﻿namespace NServiceBus.Compatibility;
+
+public interface IPlugin
 {
     Task StartEndpoint(
         string behaviorName,

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.AcceptanceTesting.Customization;
-using TestLogicApi;
+using NServiceBus.Compatibility;
 
 class Base : ITestBehavior
 {
@@ -25,7 +25,6 @@ class Base : ITestBehavior
         config.SendFailedMessagesTo(opts.ApplyUniqueRunPrefix("error"));
         config.AuditProcessedMessagesTo(opts.AuditQueue);
         config.AddHeaderToAllOutgoingMessages(nameof(opts.TestRunId), opts.TestRunId);
-        config.Pipeline.Register(new DiscardBehavior(opts.TestRunId), nameof(DiscardBehavior));
         Configure(opts, config, transport, transport.Routing());
 
         return config;

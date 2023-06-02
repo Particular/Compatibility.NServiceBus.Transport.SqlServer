@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Transport.SQLServer;
-using TestLogicApi;
+using NServiceBus.Compatibility;
 
 class MessageDrivenSubscriber : Base, ITestBehavior
 {

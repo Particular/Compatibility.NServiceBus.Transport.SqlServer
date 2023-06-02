@@ -1,6 +1,4 @@
-﻿namespace WireCompatibilityTests;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using NuGet.Common;
@@ -8,7 +6,7 @@ using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 
-public static class GeneratedVersionsSet
+static class GeneratedVersionsSet
 {
     public static IEnumerable<object[]> GetLatestMinors(string packageId, string range)
     {

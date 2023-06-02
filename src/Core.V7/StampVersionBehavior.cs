@@ -1,12 +1,11 @@
-﻿namespace TestAgent.Framework;
+﻿namespace NServiceBus.Compatibility;
 
 using System;
 using System.Threading.Tasks;
 using NServiceBus.Pipeline;
 using NServiceBus.Transport;
-using TestSuite;
 
-public class StampVersionBehavior : Behavior<IOutgoingPhysicalMessageContext>
+class StampVersionBehavior : Behavior<IOutgoingPhysicalMessageContext>
 {
     string versionString;
 
