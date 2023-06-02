@@ -21,7 +21,7 @@
         readonly PluginOptions opts;
         IPlugin plugin;
         bool started;
-        readonly string behaviorPackageName;
+        readonly string behaviorCsProjFileName;
         readonly SemanticVersion versionToTest;
         readonly string transportPackageName;
 
@@ -33,10 +33,10 @@
             string generatedProjectFolder,
             PluginOptions opts)
         {
-            projectName = $"TestAgent.V{versionToTest.ToNormalizedString()}"; //generated project depends on downstream minor
+            projectName = $"Agent.V{versionToTest.ToNormalizedString()}"; //generated project depends on downstream minor
             this.versionToTest = versionToTest;
-            behaviorPackageName = $"WireCompatibilityTests.TestBehaviors.V{versionToTest.Major}"; //behaviors depend only on downstream major
-            this.behaviorType = $"{behaviorType}, WireCompatibilityTests.TestBehaviors.V{versionToTest.Major}";
+            behaviorCsProjFileName = $"SqlServer.V{versionToTest.Major}"; //behaviors depend only on downstream major
+            this.behaviorType = $"{behaviorType}, NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}";
             this.platformSpecificAssemblies = platformSpecificAssemblies;
             this.generatedProjectFolder = generatedProjectFolder;
             this.opts = opts;
@@ -68,12 +68,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include=""..\..\PluginBase\PluginBase.csproj"" >
+    <ProjectReference Include=""..\..\Common\Common.csproj"" >
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
     </ProjectReference>
 
-    <ProjectReference Include=""..\..\{behaviorPackageName}\{behaviorPackageName}.csproj"" />
+    <ProjectReference Include=""..\..\{behaviorCsProjFileName}\{behaviorCsProjFileName}.csproj"" />
 
     <PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />
 
@@ -108,10 +108,12 @@
                 }
 
                 var folder = Path.GetDirectoryName(projectFilePath);
+
+                var coreAssemblyFilePattern = "NServiceBus.Compatibility.Core.V*.dll";
 #if DEBUG
-                var agentDllPath = Directory.EnumerateFiles($"{folder}/bin/Debug/net6.0/", "TestAgent.Framework.V*.dll").Single();
+                var agentDllPath = Directory.EnumerateFiles($"{folder}/bin/Debug/net6.0/", coreAssemblyFilePattern).Single();
 #else
-                var agentDllPath = Directory.EnumerateFiles($"{folder}/bin/Release/net6.0/", "TestAgent.Framework.V*.dll").Single();
+                var agentDllPath = Directory.EnumerateFiles($"{folder}/bin/Release/net6.0/", coreAssemblyFilePattern).Single();
 #endif
 
                 if (!File.Exists(agentDllPath))

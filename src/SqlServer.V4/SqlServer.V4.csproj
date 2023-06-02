@@ -4,11 +4,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <NoWarn>PS0018,PS0013</NoWarn>
+    <AssemblyName>NServiceBus.Compatibility.SqlServer.V4</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WireCompatibilityTests.Messages\WireCompatibilityTests.Messages.csproj" />
-    <ProjectReference Include="..\TestAgent.Framework.V7\TestAgent.Framework.V7.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Core.V7\Core.V7.csproj" />
 
     <PackageReference Include="NServiceBus.SqlServer" Version="4.0.*" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
