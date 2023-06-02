@@ -25,6 +25,10 @@
         readonly SemanticVersion versionToTest;
         readonly string transportPackageName;
 
+#if NET7_0
+        const string TargetFramework = "net7.0";
+#endif
+
         static readonly List<string> projects = new List<string>();
         public AgentPlugin(
             Dictionary<string, string> platformSpecificAssemblies,
@@ -62,7 +66,7 @@
                     await File.AppendAllTextAsync(projectFilePath, @$"<Project Sdk=""Microsoft.NET.Sdk"">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>{TargetFramework}</TargetFramework>
     <RootNamespace>TestAgent</RootNamespace>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
@@ -111,10 +115,12 @@
 
                 var coreAssemblyFilePattern = "NServiceBus.Compatibility.Core.V*.dll";
 #if DEBUG
-                var agentDllPath = Directory.EnumerateFiles($"{folder}/bin/Debug/net6.0/", coreAssemblyFilePattern).Single();
+                var scanPath = $"{folder}/bin/Debug/{TargetFramework}/";
 #else
-                var agentDllPath = Directory.EnumerateFiles($"{folder}/bin/Release/net6.0/", coreAssemblyFilePattern).Single();
+                var scanPath = $"{folder}/bin/Release/{TargetFramework}/";
 #endif
+                var agentDllPath = Directory.EnumerateFiles(scanPath, coreAssemblyFilePattern).Single();
+
 
                 if (!File.Exists(agentDllPath))
                 {
