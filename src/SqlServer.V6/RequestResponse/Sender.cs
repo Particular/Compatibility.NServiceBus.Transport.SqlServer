@@ -30,7 +30,6 @@ class Sender : Base, ITestBehavior
 
     }
 
-
     public class MyResponseHandler : IHandleMessages<MyResponse>
     {
         public Task Handle(MyResponse message, IMessageHandlerContext context)
