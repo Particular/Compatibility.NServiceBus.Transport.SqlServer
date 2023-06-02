@@ -63,5 +63,9 @@ For SQL transport these scenarios are:
 The wire compatibility tests have the following restrictions:
 
 - It only tests transport MINORS against each other for wire compatibility and will not test different Core minors.
+  - The likely hood of breaking wire compatibility in a core minor is small enough to not have to test minors
+  - Core majors are still indirectly tested as major version of transports can be dependant on different major versions of Core.
 - The test runner is dependant on AUDIT data and it is assumed that all versions of a given transport will send message to the audit queue in the same way.
 - Due to the way the resources are loaded via a plugin model the tests can only run with transports that are capable to run in .NET and .NET Framework is not supported.
+- Transport versions are not tested between Linux and Windows
+- Transport versions are not tested between framework targets (currently only targets 7.0)
