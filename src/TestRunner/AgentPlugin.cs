@@ -37,7 +37,6 @@ class AgentPlugin
         string generatedProjectFolder,
         PluginOptions opts)
     {
-        projectName = $"Agent.V{versionToTest.ToNormalizedString()}"; //generated project depends on downstream minor
         this.versionToTest = versionToTest;
         behaviorCsProjFileName = $"SqlServer.V{versionToTest.Major}"; //behaviors depend only on downstream major
         this.behaviorType = $"{behaviorType}, NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}";
@@ -45,6 +44,7 @@ class AgentPlugin
         this.generatedProjectFolder = generatedProjectFolder;
         this.opts = opts;
         transportPackageName = versionToTest.Major > 5 ? "NServiceBus.Transport.SqlServer" : "NServiceBus.SqlServer";
+        projectName = $"Agent.{transportPackageName}.{versionToTest.ToNormalizedString()}"; //generated project depends on downstream minor
     }
 
 
@@ -63,12 +63,13 @@ class AgentPlugin
             var projectFilePath = Path.Combine(projectFolder, $"{projectName}.csproj");
             if (!File.Exists(projectFilePath))
             {
-                await File.AppendAllTextAsync(projectFilePath, @$"<Project Sdk=""Microsoft.NET.Sdk"">
+                await File.WriteAllTextAsync(projectFilePath, @$"<Project Sdk=""Microsoft.NET.Sdk"">
 
   <PropertyGroup>
     <TargetFramework>{TargetFramework}</TargetFramework>
     <RootNamespace>TestAgent</RootNamespace>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <AssemblyName>NServiceBus.Compatibility.{projectName}</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
