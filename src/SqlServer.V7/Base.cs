@@ -11,9 +11,24 @@ abstract class Base : ITestBehavior
 
         var config = new EndpointConfiguration(opts.ApplyUniqueRunPrefix(endpointName));
 
-        var transport = new SqlServerTransport(opts.ConnectionString + $";App={endpointName}")
+        var connectionString = opts.ConnectionString + $";App={endpointName}";
+
+        if (endpointName.StartsWith("Catalog"))
         {
-            TransportTransactionMode = TransportTransactionMode.ReceiveOnly,
+            if (endpointName.EndsWith("Receiver"))
+            {
+                connectionString = connectionString.Replace("nservicebus", "nservicebus1");
+            }
+            else
+            {
+                connectionString = connectionString.Replace("nservicebus", "nservicebus2");
+            }
+        }
+
+        var transport = new SqlServerTransport(connectionString)
+        {
+            //TransportTransactionMode = TransportTransactionMode.ReceiveOnly,
+            TransportTransactionMode = TransportTransactionMode.SendsAtomicWithReceive,
         };
 
         transport.Subscriptions.SubscriptionTableName = new NServiceBus.Transport.SqlServer.SubscriptionTableName(opts.ApplyUniqueRunPrefix("SubscriptionRouting"));

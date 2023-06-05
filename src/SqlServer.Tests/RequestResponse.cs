@@ -60,4 +60,25 @@ public class RequestResponse
         Assert.AreEqual(senderVersion, requestVersion);
         Assert.AreEqual(receiverVersion, responseVersion);
     }
+
+    [Test]
+    [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[6,)")]
+    public async Task MultiCatalog(NuGetVersion senderVersion, NuGetVersion receiverVersion)
+    {
+        var result = await SqlTransportScenarioRunner.Run("CatalogSender", "CatalogReceiver", senderVersion, receiverVersion, x => x.Count == 2).ConfigureAwait(false);
+
+        Assert.True(result.Succeeded);
+
+        var request = result.AuditedMessages.Single(x => x.Headers[Headers.MessageIntent] == nameof(MessageIntent.Send));
+        var response = result.AuditedMessages.Single(x => x.Headers[Headers.MessageIntent] == nameof(MessageIntent.Reply));
+
+        Assert.AreEqual(request.Headers[Headers.MessageId], response.Headers[Headers.RelatedTo]);
+        Assert.AreEqual(request.Headers[Headers.ConversationId], response.Headers[Headers.ConversationId]);
+        Assert.AreEqual(request.Headers[Headers.CorrelationId], response.Headers[Headers.CorrelationId]);
+
+        var requestVersion = SemanticVersion.Parse(request.Headers[Keys.WireCompatVersion]);
+        var responseVersion = SemanticVersion.Parse(response.Headers[Keys.WireCompatVersion]);
+        Assert.AreEqual(senderVersion, requestVersion);
+        Assert.AreEqual(receiverVersion, responseVersion);
+    }
 }
