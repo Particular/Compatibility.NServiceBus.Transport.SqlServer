@@ -9,14 +9,12 @@ abstract class Base : ITestBehavior
     {
         var endpointName = GetType().Name;
 
-        var config = new EndpointConfiguration(opts.ApplyUniqueRunPrefix(endpointName));
+        var config = new EndpointConfiguration(endpointName);
 
         var transport = new SqlServerTransport(opts.ConnectionString + $";App={endpointName}")
         {
             TransportTransactionMode = TransportTransactionMode.ReceiveOnly,
         };
-
-        transport.Subscriptions.SubscriptionTableName = new NServiceBus.Transport.SqlServer.SubscriptionTableName(opts.ApplyUniqueRunPrefix("SubscriptionRouting"));
 
         var routingConfig = config.UseTransport(transport);
 

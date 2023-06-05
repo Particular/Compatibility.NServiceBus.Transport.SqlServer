@@ -14,9 +14,9 @@ class SchemaSender : Sender
     {
         transportConfig.DefaultSchema = MultiSchema.Sender;
         transportConfig.SchemaAndCatalog.UseSchemaForQueue(opts.AuditQueue, MultiSchema.Audit);
-        transportConfig.SchemaAndCatalog.UseSchemaForQueue(opts.ApplyUniqueRunPrefix(nameof(SchemaReceiver)), MultiSchema.Receiver);
+        transportConfig.SchemaAndCatalog.UseSchemaForQueue(nameof(SchemaReceiver), MultiSchema.Receiver);
 
-        routingConfig.RouteToEndpoint(typeof(MyRequest), opts.ApplyUniqueRunPrefix(nameof(SchemaReceiver)));
+        routingConfig.RouteToEndpoint(typeof(MyRequest), nameof(SchemaReceiver));
     }
 }
 
@@ -29,7 +29,7 @@ class Sender : Base
         RoutingSettings<SqlServerTransport> routingConfig
     )
     {
-        routingConfig.RouteToEndpoint(typeof(MyRequest), opts.ApplyUniqueRunPrefix(nameof(Receiver)));
+        routingConfig.RouteToEndpoint(typeof(MyRequest), nameof(Receiver));
     }
 
     public override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)

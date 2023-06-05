@@ -13,7 +13,7 @@ class MessageDrivenSubscriber : Base, ITestBehavior
         )
     {
         var x = transportConfig.EnableMessageDrivenPubSubCompatibilityMode();
-        x.RegisterPublisher(typeof(MyEvent), args.ApplyUniqueRunPrefix(nameof(MessageDrivenPublisher)));
+        x.RegisterPublisher(typeof(MyEvent), nameof(MessageDrivenPublisher));
     }
 
     public class MyEventHandler : IHandleMessages<MyEvent>

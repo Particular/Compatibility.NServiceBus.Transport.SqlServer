@@ -13,7 +13,7 @@ class Sender : Base, ITestBehavior
         )
     {
         var routing = transportConfig.Routing();
-        routing.RouteToEndpoint(typeof(MyRequest), opts.ApplyUniqueRunPrefix(nameof(Receiver)));
+        routing.RouteToEndpoint(typeof(MyRequest), nameof(Receiver));
     }
 
     public override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
@@ -27,7 +27,6 @@ class Sender : Base, ITestBehavior
             Console.WriteLine("FAIL!" + ex);
             throw;
         }
-
     }
 
     public class MyResponseHandler : IHandleMessages<MyResponse>

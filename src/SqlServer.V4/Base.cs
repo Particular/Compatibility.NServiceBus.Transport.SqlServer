@@ -8,7 +8,7 @@ class Base : ITestBehavior
     public EndpointConfiguration Configure(PluginOptions opts)
     {
         var endpointName = GetType().Name;
-        var config = new EndpointConfiguration(opts.ApplyUniqueRunPrefix(endpointName));
+        var config = new EndpointConfiguration(endpointName);
 
         var transport = config.UseTransport<SqlServerTransport>();
         transport.ConnectionString(opts.ConnectionString + $";App={endpointName}");

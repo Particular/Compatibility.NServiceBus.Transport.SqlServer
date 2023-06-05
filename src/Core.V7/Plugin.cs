@@ -39,7 +39,6 @@ public class Plugin : IPlugin
         config.Conventions().DefiningCommandsAs(t => t.GetInterfaces().Any(x => x.Name == "ICommand"));
         config.Conventions().DefiningEventsAs(t => t.GetInterfaces().Any(x => x.Name == "IEvent"));
 
-        config.SendFailedMessagesTo(opts.ApplyUniqueRunPrefix("error"));
         config.AuditProcessedMessagesTo(opts.AuditQueue);
         config.AddHeaderToAllOutgoingMessages(nameof(opts.TestRunId), opts.TestRunId);
 

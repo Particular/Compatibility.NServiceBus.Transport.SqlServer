@@ -48,14 +48,13 @@ if(db_id('{database}') is null)
         await ExecuteSql(connectionString, $"DROP TABLE IF EXISTS [{schema}].[{tableName}]", cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task DropTablesWithPrefix(string connectionString, string prefix, CancellationToken cancellationToken = default)
+    public static async Task DropTables(string connectionString, CancellationToken cancellationToken = default)
     {
         var sql = @$"
 DECLARE @cmd varchar(4000)
 DECLARE cmds CURSOR FOR
 SELECT 'DROP TABLE [' + TABLE_SCHEMA +'].[' + TABLE_NAME + ']' 
 FROM INFORMATION_SCHEMA.TABLES
-WHERE TABLE_NAME LIKE '{prefix}%'
 
 OPEN cmds
 WHILE 1 = 1

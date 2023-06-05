@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using NuGet.Versioning;
 using NUnit.Framework;
 
-[Parallelizable(ParallelScope.All)]
 [TestFixture]
 public class PubSubMessageDriven
 {

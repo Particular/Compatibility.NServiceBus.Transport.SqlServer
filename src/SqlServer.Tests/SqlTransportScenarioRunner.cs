@@ -44,15 +44,14 @@ static class SqlTransportScenarioRunner
                 RunCount = runCount,
             };
 
-            await SqlHelper.DropTablesWithPrefix(Global.ConnectionString, opts.ApplyUniqueRunPrefix(string.Empty), cancellationToken).ConfigureAwait(false);
+            await SqlHelper.DropTables(Global.ConnectionString, cancellationToken).ConfigureAwait(false);
 
-            opts.AuditQueue = opts.ApplyUniqueRunPrefix("AuditSpy");
+            opts.AuditQueue = "AuditSpy";
 
             var auditSpyTransport = new SqlServerTransport(connectionString + ";App=AuditSpy")
             {
                 TransportTransactionMode = TransportTransactionMode.ReceiveOnly,
             };
-            auditSpyTransport.Subscriptions.SubscriptionTableName = new Transport.SqlServer.SubscriptionTableName(opts.ApplyUniqueRunPrefix("SubscriptionRouting"));
 
             var agents = new[]
             {

@@ -7,7 +7,6 @@ using NuGet.Versioning;
 using NUnit.Framework;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 public class RequestResponse
 {
     [OneTimeSetUp]
