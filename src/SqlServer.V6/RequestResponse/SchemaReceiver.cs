@@ -11,7 +11,7 @@ class SchemaReceiver : Receiver
     {
         base.Configure(opts, endpointConfig, transportConfig);
 
-        transportConfig.DefaultSchema(nameof(Receiver));
+        transportConfig.DefaultSchema("receiver");
         transportConfig.UseSchemaForQueue(opts.AuditQueue, "dbo");
     }
 }
