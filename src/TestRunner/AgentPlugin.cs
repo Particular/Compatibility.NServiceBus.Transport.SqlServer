@@ -91,7 +91,7 @@ class AgentPlugin
             buildProcess.StartInfo.FileName = @"dotnet";
             buildProcess.StartInfo.Arguments = $"build \"{projectFilePath}\"";
 #if !DEBUG
-                buildProcess.StartInfo.Arguments += " --configuration Release";
+            buildProcess.StartInfo.Arguments += " --configuration Release";
 #endif
             buildProcess.StartInfo.UseShellExecute = false;
             buildProcess.StartInfo.RedirectStandardOutput = true;
@@ -117,7 +117,7 @@ class AgentPlugin
 #if DEBUG
             var scanPath = $"{folder}/bin/Debug/{TargetFramework}/";
 #else
-                var scanPath = $"{folder}/bin/Release/{TargetFramework}/";
+            var scanPath = $"{folder}/bin/Release/{TargetFramework}/";
 #endif
             var agentDllPath = Directory.EnumerateFiles(scanPath, coreAssemblyFilePattern).Single();
 
