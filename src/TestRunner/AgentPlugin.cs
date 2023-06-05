@@ -120,12 +120,11 @@ class AgentPlugin
 #else
             var scanPath = $"{folder}/bin/Release/{TargetFramework}/";
 #endif
-            var agentDllPath = Directory.EnumerateFiles(scanPath, coreAssemblyFilePattern).Single();
+            var agentDllPath = Directory.EnumerateFiles(scanPath, coreAssemblyFilePattern).SingleOrDefault();
 
-
-            if (!File.Exists(agentDllPath))
+            if (default == agentDllPath)
             {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException("Expected agent assembly not present after compilation", Path.Combine(scanPath, coreAssemblyFilePattern));
             }
 
             var pluginAssembly = LoadPlugin(agentDllPath);
