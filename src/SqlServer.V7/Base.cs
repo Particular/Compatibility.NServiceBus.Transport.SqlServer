@@ -10,8 +10,6 @@ abstract class Base : ITestBehavior
         var endpointName = GetType().Name;
 
         var config = new EndpointConfiguration(opts.ApplyUniqueRunPrefix(endpointName));
-        config.EnableInstallers();
-        config.PurgeOnStartup(true);
 
         var transport = new SqlServerTransport(opts.ConnectionString + $";App={endpointName}")
         {
