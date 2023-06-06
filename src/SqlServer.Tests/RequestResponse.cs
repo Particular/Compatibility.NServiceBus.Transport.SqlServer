@@ -1,5 +1,6 @@
 ﻿namespace NServiceBus.Compatibility.TestRunner.SqlServer.Tests;
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NServiceBus;
@@ -21,7 +22,13 @@ public class RequestResponse
     [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[4,)")]
     public async Task SingleSchema(NuGetVersion senderVersion, NuGetVersion receiverVersion)
     {
-        var result = await SqlTransportScenarioRunner.Run("Sender", "Receiver", senderVersion, receiverVersion, x => x.Count == 2).ConfigureAwait(false);
+        var connectionStrings = new Dictionary<string, string>()
+        {
+            ["Sender"] = Global.ConnectionString + $";App=Sender",
+            ["Receiver"] = Global.ConnectionString + $";App=Receiver",
+        };
+
+        var result = await SqlTransportScenarioRunner.Run("Sender", "Receiver", senderVersion, receiverVersion, x => x.Count == 2, connectionStrings).ConfigureAwait(false);
 
         Assert.True(result.Succeeded);
 
@@ -44,7 +51,13 @@ public class RequestResponse
     [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[6,)")]
     public async Task MultiSchema(NuGetVersion senderVersion, NuGetVersion receiverVersion)
     {
-        var result = await SqlTransportScenarioRunner.Run("SchemaSender", "SchemaReceiver", senderVersion, receiverVersion, x => x.Count == 2).ConfigureAwait(false);
+        var connectionStrings = new Dictionary<string, string>()
+        {
+            ["SchemaSender"] = Global.ConnectionString + $";App=SchemaSender",
+            ["SchemaReceiver"] = Global.ConnectionString + $";App=SchemaReceiver",
+        };
+
+        var result = await SqlTransportScenarioRunner.Run("SchemaSender", "SchemaReceiver", senderVersion, receiverVersion, x => x.Count == 2, connectionStrings).ConfigureAwait(false);
 
         Assert.True(result.Succeeded);
 
@@ -65,7 +78,13 @@ public class RequestResponse
     [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[6,)")]
     public async Task MultiCatalog(NuGetVersion senderVersion, NuGetVersion receiverVersion)
     {
-        var result = await SqlTransportScenarioRunner.Run("CatalogSender", "CatalogReceiver", senderVersion, receiverVersion, x => x.Count == 2).ConfigureAwait(false);
+        var connectionStrings = new Dictionary<string, string>()
+        {
+            ["CatalogSender"] = Global.ConnectionString.Replace(MultiCatalogMap.Audit, MultiCatalogMap.Sender) + $";App=CatalogSender",
+            ["CatalogReceiver"] = Global.ConnectionString.Replace(MultiCatalogMap.Audit, MultiCatalogMap.Receiver) + $";App=CatalogReceiver",
+        };
+
+        var result = await SqlTransportScenarioRunner.Run("CatalogSender", "CatalogReceiver", senderVersion, receiverVersion, x => x.Count == 2, connectionStrings).ConfigureAwait(false);
 
         Assert.True(result.Succeeded);
 

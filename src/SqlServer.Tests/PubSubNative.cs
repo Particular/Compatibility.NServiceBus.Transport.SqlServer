@@ -1,5 +1,6 @@
 ﻿namespace NServiceBus.Compatibility.TestRunner.SqlServer.Tests;
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NServiceBus;
@@ -14,12 +15,19 @@ public class PubSubNative
     [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[5,)")]
     public async Task Simple(NuGetVersion subscriberVersion, NuGetVersion publisherVersion)
     {
+        var connectionStrings = new Dictionary<string, string>()
+        {
+            ["Publisher"] = Global.ConnectionString + $";App=Publisher",
+            ["Subscriber"] = Global.ConnectionString + $";App=Subscriber",
+        };
+
         var result = await SqlTransportScenarioRunner.Run(
             "Subscriber",
             "Publisher",
             subscriberVersion,
             publisherVersion,
-            x => x.Count == 2
+            x => x.Count == 2,
+            connectionStrings
             )
             .ConfigureAwait(false);
 

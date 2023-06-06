@@ -9,8 +9,8 @@ class CatalogSender : Sender
         TransportExtensions<SqlServerTransport> transportConfig
     )
     {
-        transportConfig.UseCatalogForQueue(opts.AuditQueue, "nservicebus");
-        transportConfig.UseCatalogForQueue(opts.ApplyUniqueRunPrefix(nameof(CatalogReceiver)), "nservicebus1");
+        transportConfig.UseCatalogForQueue(opts.AuditQueue, MultiCatalogMap.Audit);
+        transportConfig.UseCatalogForQueue(opts.ApplyUniqueRunPrefix(nameof(CatalogReceiver)), MultiCatalogMap.Receiver);
         var routingConfig = transportConfig.Routing();
 
         routingConfig.RouteToEndpoint(typeof(MyRequest), opts.ApplyUniqueRunPrefix(nameof(CatalogReceiver)));
@@ -27,6 +27,6 @@ class CatalogReceiver : Receiver
     {
         base.Configure(opts, endpointConfig, transportConfig);
 
-        transportConfig.UseCatalogForQueue(opts.AuditQueue, "nservicebus");
+        transportConfig.UseCatalogForQueue(opts.AuditQueue, MultiCatalogMap.Audit);
     }
 }

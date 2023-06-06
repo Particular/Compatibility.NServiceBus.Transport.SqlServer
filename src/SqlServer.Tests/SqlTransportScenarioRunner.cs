@@ -18,7 +18,8 @@ static class SqlTransportScenarioRunner
         string bTypeNameBehavior,
         SemanticVersion a,
         SemanticVersion b,
-        Func<List<AuditMessage>, bool> doneCallback
+        Func<List<AuditMessage>, bool> doneCallback,
+        Dictionary<string, string> connectionStrings
         )
     {
         using var cts = new CancellationTokenSource(TestTimeout);
@@ -39,7 +40,7 @@ static class SqlTransportScenarioRunner
 
             var opts = new PluginOptions
             {
-                ConnectionString = Global.ConnectionString,
+                ConnectionStrings = connectionStrings,
                 TestRunId = testRunId,
                 RunCount = runCount,
             };

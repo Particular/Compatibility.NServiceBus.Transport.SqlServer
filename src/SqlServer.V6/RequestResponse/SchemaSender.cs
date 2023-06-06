@@ -10,9 +10,9 @@ class SchemaSender : Sender
         )
     {
 
-        transportConfig.DefaultSchema(MultiSchema.Sender);
-        transportConfig.UseSchemaForQueue(opts.AuditQueue, MultiSchema.Audit);
-        transportConfig.UseSchemaForEndpoint(opts.ApplyUniqueRunPrefix(nameof(SchemaReceiver)), MultiSchema.Receiver);
+        transportConfig.DefaultSchema(MultiSchemaMap.Sender);
+        transportConfig.UseSchemaForQueue(opts.AuditQueue, MultiSchemaMap.Audit);
+        transportConfig.UseSchemaForEndpoint(opts.ApplyUniqueRunPrefix(nameof(SchemaReceiver)), MultiSchemaMap.Receiver);
 
         var routing = transportConfig.Routing();
         routing.RouteToEndpoint(typeof(MyRequest), opts.ApplyUniqueRunPrefix(nameof(SchemaReceiver)));

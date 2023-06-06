@@ -11,7 +11,7 @@ class Base : ITestBehavior
         var config = new EndpointConfiguration(opts.ApplyUniqueRunPrefix(endpointName));
 
         var transport = config.UseTransport<SqlServerTransport>();
-        transport.ConnectionString(opts.ConnectionString + $";App={endpointName}");
+        transport.ConnectionString(opts.ConnectionStrings[endpointName]);
         transport.Transactions(TransportTransactionMode.ReceiveOnly);
         Configure(opts, config, transport, transport.Routing());
 

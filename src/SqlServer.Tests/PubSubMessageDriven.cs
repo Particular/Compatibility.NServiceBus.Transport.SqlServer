@@ -1,5 +1,6 @@
 ﻿namespace NServiceBus.Compatibility.TestRunner.SqlServer.Tests;
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Versioning;
@@ -13,12 +14,19 @@ public class PubSubMessageDriven
     [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[4,6)")]
     public async Task Simple(NuGetVersion publisherVersion, NuGetVersion subscriberVersion)
     {
+        var connectionStrings = new Dictionary<string, string>()
+        {
+            ["MessageDrivenPublisher"] = Global.ConnectionString + $";App=MessageDrivenPublisher",
+            ["MessageDrivenSubscriber"] = Global.ConnectionString + $";App=MessageDrivenSubscriber",
+        };
+
         var result = await SqlTransportScenarioRunner.Run(
             "MessageDrivenPublisher",
             "MessageDrivenSubscriber",
             publisherVersion,
             subscriberVersion,
-            x => x.Count == 1
+            x => x.Count == 1,
+            connectionStrings
             )
             .ConfigureAwait(false);
 

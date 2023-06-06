@@ -13,8 +13,8 @@ class SchemaReceiver : Receiver
     {
         base.Configure(opts, endpointConfig, transportConfig, routingConfig);
 
-        transportConfig.DefaultSchema = MultiSchema.Receiver;
-        transportConfig.SchemaAndCatalog.UseSchemaForQueue(opts.AuditQueue, MultiSchema.Audit);
+        transportConfig.DefaultSchema = MultiSchemaMap.Receiver;
+        transportConfig.SchemaAndCatalog.UseSchemaForQueue(opts.AuditQueue, MultiSchemaMap.Audit);
     }
 }
 
