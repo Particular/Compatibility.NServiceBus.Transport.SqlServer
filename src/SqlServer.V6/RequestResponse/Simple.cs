@@ -38,3 +38,14 @@ class Sender : Base, ITestBehavior
         }
     }
 }
+
+class Receiver : Base
+{
+    public class MyRequestHandler : IHandleMessages<MyRequest>
+    {
+        public Task Handle(MyRequest message, IMessageHandlerContext context)
+        {
+            return context.Reply(new MyResponse());
+        }
+    }
+}

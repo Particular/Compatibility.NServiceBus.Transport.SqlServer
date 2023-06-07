@@ -5,6 +5,7 @@ using NServiceBus;
 using NServiceBus.AcceptanceTesting;
 using NServiceBus.Pipeline;
 using NServiceBus.Transport;
+using NServiceBus.Transport.SQLServer;
 using NServiceBus.Compatibility;
 
 class MessageDrivenPublisher : Base, ITestBehavior
@@ -18,6 +19,7 @@ class MessageDrivenPublisher : Base, ITestBehavior
         RoutingSettings<SqlServerTransport> routingConfig
         )
     {
+        _ = transportConfig.EnableMessageDrivenPubSubCompatibilityMode();
         endpointConfig.Pipeline.Register(new SubscriptionBehavior(eventArgs => subscribed.SetResult(true), MessageIntentEnum.Subscribe), "Detects subscription");
     }
 
@@ -73,5 +75,28 @@ class MessageDrivenPublisher : Base, ITestBehavior
 
         Action<SubscriptionEventArgs> action;
         MessageIntentEnum intentToHandle;
+    }
+}
+
+
+class MessageDrivenSubscriber : Base, ITestBehavior
+{
+    protected override void Configure(
+        PluginOptions args,
+        EndpointConfiguration endpointConfig,
+        TransportExtensions<SqlServerTransport> transportConfig,
+        RoutingSettings<SqlServerTransport> routingConfig
+        )
+    {
+        var x = transportConfig.EnableMessageDrivenPubSubCompatibilityMode();
+        x.RegisterPublisher(typeof(MyEvent), args.ApplyUniqueRunPrefix(nameof(MessageDrivenPublisher)));
+    }
+
+    public class MyEventHandler : IHandleMessages<MyEvent>
+    {
+        public Task Handle(MyEvent message, IMessageHandlerContext context)
+        {
+            return Task.CompletedTask;
+        }
     }
 }
