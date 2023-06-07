@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Compatibility;
 
-class Sender : Base, ITestBehavior
+class Sender : Base
 {
     public override void Configure(
         PluginOptions opts,
@@ -16,7 +16,7 @@ class Sender : Base, ITestBehavior
         routing.RouteToEndpoint(typeof(MyRequest), opts.ApplyUniqueRunPrefix(nameof(Receiver)));
     }
 
-    public override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
+    protected override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
     {
         try
         {

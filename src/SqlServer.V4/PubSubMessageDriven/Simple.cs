@@ -7,7 +7,7 @@ using NServiceBus.Pipeline;
 using NServiceBus.Transport;
 using NServiceBus.Compatibility;
 
-class MessageDrivenPublisher : Base, ITestBehavior
+class MessageDrivenPublisher : Base
 {
     TaskCompletionSource<bool> subscribed = new();
 
@@ -21,7 +21,7 @@ class MessageDrivenPublisher : Base, ITestBehavior
         endpointConfig.Pipeline.Register(new SubscriptionBehavior(eventArgs => subscribed.SetResult(true), MessageIntentEnum.Subscribe), "Detects subscription");
     }
 
-    public override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
+    protected override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
     {
         await subscribed.Task.ConfigureAwait(false);
         await endpointInstance.Publish(new MyEvent()).ConfigureAwait(false);
@@ -76,7 +76,7 @@ class MessageDrivenPublisher : Base, ITestBehavior
     }
 }
 
-class MessageDrivenSubscriber : Base, ITestBehavior
+class MessageDrivenSubscriber : Base
 {
     protected override void Configure(
         PluginOptions args,

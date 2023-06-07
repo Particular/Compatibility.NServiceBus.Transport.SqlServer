@@ -3,7 +3,6 @@
 public interface IPlugin
 {
     Task StartEndpoint(
-        string behaviorName,
         PluginOptions opts,
         CancellationToken cancellationToken = default
         );

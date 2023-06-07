@@ -15,7 +15,7 @@ class Sender : Base
         routingConfig.RouteToEndpoint(typeof(MyRequest), opts.ApplyUniqueRunPrefix("Receiver"));
     }
 
-    public override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
+    protected override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
     {
         await endpointInstance.Send(new MyRequest()).ConfigureAwait(false);
     }

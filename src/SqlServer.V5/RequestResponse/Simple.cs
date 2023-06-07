@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Compatibility;
 
-class Sender : Base, ITestBehavior
+class Sender : Base
 {
     protected override void Configure(
         PluginOptions opts,
@@ -15,7 +15,7 @@ class Sender : Base, ITestBehavior
         routingConfig.RouteToEndpoint(typeof(MyRequest), opts.ApplyUniqueRunPrefix("Receiver"));
     }
 
-    public override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
+    protected override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
     {
         await endpointInstance.Send(new MyRequest()).ConfigureAwait(false);
     }
@@ -29,9 +29,9 @@ class Sender : Base, ITestBehavior
     }
 }
 
-class Receiver : Base, ITestBehavior
+class Receiver : Base
 {
-    public override Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
+    protected override Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
     }

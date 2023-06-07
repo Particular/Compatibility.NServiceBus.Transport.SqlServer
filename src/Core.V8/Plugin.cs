@@ -11,23 +11,15 @@ using NServiceBus;
 using NServiceBus.AcceptanceTesting.Customization;
 using NServiceBus.Transport;
 
-public class Plugin : IPlugin
+public abstract class Plugin : IPlugin
 {
     IEndpointInstance instance;
-    ITestBehavior behavior;
 
     public async Task StartEndpoint(
-        string behaviorClassName,
         PluginOptions opts,
         CancellationToken cancellationToken = default)
     {
-        var behaviorClass = Type.GetType(behaviorClassName, true);
-
-        Console.Out.WriteLine($">> Creating {behaviorClass}");
-
-        behavior = (ITestBehavior)Activator.CreateInstance(behaviorClass);
-
-        var config = behavior.Configure(opts);
+        var config = Configure(opts);
         config.EnableInstallers();
         config.PurgeOnStartup(true);
 
@@ -42,7 +34,7 @@ public class Plugin : IPlugin
         config.AuditProcessedMessagesTo(opts.AuditQueue);
         config.AddHeaderToAllOutgoingMessages(nameof(opts.TestRunId), opts.TestRunId);
 
-        config.TypesToIncludeInScan(GetTypesToScan(behaviorClass).ToList());
+        config.TypesToIncludeInScan(GetTypesToScan(GetType()).ToList());
 
         instance = await Endpoint.Start(config, cancellationToken).ConfigureAwait(false);
     }
@@ -65,8 +57,9 @@ public class Plugin : IPlugin
         }
     }
 
-    public Task StartTest(CancellationToken cancellationToken = default) =>
-        behavior.Execute(instance, cancellationToken);
-
+    public Task StartTest(CancellationToken cancellationToken = default) => Execute(instance, cancellationToken);
     public Task Stop(CancellationToken cancellationToken = default) => instance.Stop(cancellationToken);
+
+    protected virtual Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    protected abstract EndpointConfiguration Configure(PluginOptions opts);
 }

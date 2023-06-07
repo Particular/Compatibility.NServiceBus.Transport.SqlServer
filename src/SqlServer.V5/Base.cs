@@ -1,12 +1,10 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using NServiceBus;
+﻿using NServiceBus;
 using NServiceBus.Transport.SQLServer;
 using NServiceBus.Compatibility;
 
-class Base : ITestBehavior
+abstract class Base : Plugin
 {
-    public EndpointConfiguration Configure(PluginOptions opts)
+    protected override EndpointConfiguration Configure(PluginOptions opts)
     {
         var endpointName = GetType().Name;
 
@@ -29,10 +27,5 @@ class Base : ITestBehavior
         RoutingSettings<SqlServerTransport> routingConfig
     )
     {
-    }
-
-    public virtual Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
-    {
-        return Task.CompletedTask;
     }
 }

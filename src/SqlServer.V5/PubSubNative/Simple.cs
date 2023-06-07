@@ -4,7 +4,7 @@ using NServiceBus;
 
 class Publisher : Base
 {
-    public override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
+    protected override async Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default)
     {
         await endpointInstance.Publish(new MyEvent()).ConfigureAwait(false);
     }
