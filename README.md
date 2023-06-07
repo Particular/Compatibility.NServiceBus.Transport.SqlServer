@@ -32,12 +32,13 @@ The test project defines unit tests for the transport specific scenarios. These 
 
 The versions are extracted from MyGet for a configured version range for a specific package where the range is expressed as a NuGet version range expression.
 
-    [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[5,)")]
+```c#
+[TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[5,)")]
+```
 
 The test will only return all latest minors that match the range and only match alpha, beta or rc pre release packages.
 
 ### Test scenario plugin runner
-
 
 The unit tests invokes the scenario runner with which versions to tests and for each which behavior must be invoked. The runner initializes an agent for each version. The agent is responsible for loading and managing the lifetime of the resources of that version.
 
@@ -57,6 +58,7 @@ For SQL transport these scenarios are:
 - PubSub - Native (version 5+)
 - Request Response - Single shared SQL schema (version 4+)
 - Request Response - Multiple SQL schemas (version 6+)
+- Request Response - Multiple SQL catalogs (version 6+)
 
 ## Restrictions
 
@@ -69,3 +71,55 @@ The wire compatibility tests have the following restrictions:
 - Due to the way the resources are loaded via a plugin model the tests can only run with transports that are capable to run in .NET and .NET Framework is not supported.
 - Transport versions are not tested between Linux and Windows
 - Transport versions are not tested between framework targets (currently only targets 7.0)
+
+## Why isn't this part of the NServiceBus.SqlServer repository?
+
+https://github.com/Particular/Platform/blob/main/documentation/transports/wire-compatibility.md
+
+
+Potential solutions for compatibility implementations:
+
+Everything on the main branch:
+
+Each major version of the transports needs to have a conforming project. It would not make sense to store all of this as part of the main branch. Especially as this means that this eventually make it into every release branch and would need to be maintained.
+
+Changes on minors would not test against newer minors, only against previous minors.
+
+
+Conforming project per minor:
+
+A conforming project is based on a minimum minor within a major version. Lets assume its 1.0, and over its lifetime we have 8 minors which means each minor has a conforming project that needs to be maintained and extended when new scenarios are added.
+
+Who is then going to do the actual test run?
+
+Changes on minors would not test against newer minors, only against previous minors.
+
+
+ nor make sense to have each branch have its own conforming project as this is conforming to a specific transport configuration that is compatible with a minimum major/minor version. If such a project requires updating each branch needs to be updated.
+
+
+## More flexibility
+
+Allows for testing cross transport compatibility like testing ASBL with ASBS forwarding topology
+
+
+NServiceBus.Compatibility.AzureServiceBus
+
+NServiceBus.Compatibility.AzureServiceBus.ASBL.V8
+
+NServiceBus.Compatibility.AzureServiceBus.ASBS.V1
+
+
+## Prevent a explosion of package on myget
+
+It would only make sense to have shared test infrastructure on myget.
+
+
+Extend release checklist to review compatibility test results before releasing.
+
+
+
+Optionally: CI step "compatibility" that tests current minor on branch against all released latest minors/
+
+
+
