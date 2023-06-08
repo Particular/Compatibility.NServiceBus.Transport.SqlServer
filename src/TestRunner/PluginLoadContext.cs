@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -13,15 +12,25 @@ using System.Runtime.Loader;
 /// </summary>
 sealed class PluginLoadContext : AssemblyLoadContext
 {
-    readonly Dictionary<string, string> platformSpecificManagedAssemblies;
     readonly string platformPath;
     readonly string libPath;
     readonly AssemblyDependencyResolver resolver;
 
-    public PluginLoadContext(string pluginPath, Dictionary<string, string> platformSpecificManagedAssemblies = default)
+    static readonly string[] Frameworks = new[]
     {
-        this.platformSpecificManagedAssemblies = platformSpecificManagedAssemblies;
+        "net7.0",
+        "net6.0",
+        "net5.0",
+        "netcoreapp3.1",
+        "netcoreapp3.0",
+        "netcoreapp2.1",
+        "netcoreapp2.0",
+        "netstandard2.1",
+        "netstandard2.0",
+    };
 
+    public PluginLoadContext(string pluginPath)
+    {
         var path = Path.GetDirectoryName(pluginPath);
         resolver = new AssemblyDependencyResolver(pluginPath);
         platformPath = Path.Combine(path, "runtimes", $"win-{RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant()}", "native");
@@ -54,7 +63,8 @@ sealed class PluginLoadContext : AssemblyLoadContext
     string ResolveManagedDllPath(AssemblyName assemblyName)
     {
         var name = assemblyName.Name;
-        if (platformSpecificManagedAssemblies != null && platformSpecificManagedAssemblies.TryGetValue(name, out var framework))
+
+        foreach (var framework in Frameworks)
         {
             var dllPath = Path.Combine(libPath, framework, $"{name}.dll");
             if (File.Exists(dllPath))

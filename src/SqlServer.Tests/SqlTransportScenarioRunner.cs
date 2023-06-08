@@ -24,13 +24,6 @@ static class SqlTransportScenarioRunner
     {
         using var cts = new CancellationTokenSource(TestTimeout);
         var cancellationToken = cts.Token;
-
-        var platformSpecificAssemblies = new Dictionary<string, string>
-        {
-            ["Microsoft.Data.SqlClient"] = "net6.0",
-            ["System.Data.SqlClient"] = "netcoreapp2.1"
-        };
-
         var connectionString = Global.ConnectionString;
 
         var runCount = Pool.Get();
@@ -62,7 +55,7 @@ static class SqlTransportScenarioRunner
             };
 
             var result = await TestScenarioPluginRunner
-                .Run(opts, agents, auditSpyTransport, platformSpecificAssemblies, doneCallback, cancellationToken)
+                .Run(opts, agents, auditSpyTransport, doneCallback, cancellationToken)
                 .ConfigureAwait(false);
 
             result.AuditedMessages = result.AuditedMessages;

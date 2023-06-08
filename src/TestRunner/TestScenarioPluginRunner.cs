@@ -15,7 +15,6 @@ public class TestScenarioPluginRunner
         PluginOptions opts,
         AgentInfo[] agents,
         TransportDefinition auditSpyTransport,
-        Dictionary<string, string> platformSpecificAssemblies,
         Func<List<AuditMessage>, bool> doneCallback,
         CancellationToken cancellationToken = default
         )
@@ -23,7 +22,6 @@ public class TestScenarioPluginRunner
         var generatedFolderPath = FindGeneratedFolderPath();
 
         var processes = agents.Select(x => new AgentPlugin(
-            platformSpecificAssemblies,
             x.Version,
             x.Behavior,
             generatedFolderPath,

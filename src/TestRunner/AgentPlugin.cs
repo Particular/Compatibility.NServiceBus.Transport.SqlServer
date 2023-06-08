@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Threading;
@@ -15,7 +14,6 @@ class AgentPlugin
 
     readonly string projectName;
     readonly string behaviorTypeName;
-    readonly Dictionary<string, string> platformSpecificAssemblies;
     readonly string generatedProjectFolder;
     readonly PluginOptions opts;
     IPlugin plugin;
@@ -31,7 +29,6 @@ class AgentPlugin
 #endif
 
     public AgentPlugin(
-        Dictionary<string, string> platformSpecificAssemblies,
         SemanticVersion versionToTest,
         string behaviorTypeName,
         string generatedProjectFolder,
@@ -40,7 +37,6 @@ class AgentPlugin
         this.versionToTest = versionToTest;
         behaviorCsProjFileName = $"SqlServer.V{versionToTest.Major}"; //behaviors depend only on downstream major
         this.behaviorTypeName = behaviorTypeName; //$"{behaviorTypeName}, NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}";
-        this.platformSpecificAssemblies = platformSpecificAssemblies;
         this.generatedProjectFolder = generatedProjectFolder;
         this.opts = opts;
         transportPackageName = versionToTest.Major > 5 ? "NServiceBus.Transport.SqlServer" : "NServiceBus.SqlServer";
@@ -157,7 +153,7 @@ class AgentPlugin
 
     Assembly LoadPlugin(string pluginLocation)
     {
-        pluginLoadContext = new PluginLoadContext(pluginLocation, platformSpecificAssemblies);
+        pluginLoadContext = new PluginLoadContext(pluginLocation);
         var assemblyName = AssemblyName.GetAssemblyName(pluginLocation);
         return pluginLoadContext.LoadFromAssemblyName(assemblyName);
     }
