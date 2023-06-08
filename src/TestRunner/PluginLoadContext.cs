@@ -5,6 +5,12 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
 
+/// <summary>
+/// Based on:
+/// 
+/// - https://learn.microsoft.com/en-us/dotnet/core/tutorials/creating-app-with-plugin-support
+/// - https://github.com/dotnet/samples/tree/main/core/extensions/AppWithPlugin
+/// </summary>
 sealed class PluginLoadContext : AssemblyLoadContext
 {
     readonly Dictionary<string, string> platformSpecificManagedAssemblies;
