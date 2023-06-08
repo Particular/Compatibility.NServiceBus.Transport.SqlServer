@@ -5,19 +5,23 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
 
-class PluginLoadContext : AssemblyLoadContext
+sealed class PluginLoadContext : AssemblyLoadContext
 {
     readonly Dictionary<string, string> platformSpecificManagedAssemblies;
-    readonly string pluginPath;
+    readonly string platformPath;
+    readonly string libPath;
     readonly AssemblyDependencyResolver resolver;
-    readonly string os;
 
-    public PluginLoadContext(string pluginPath, Dictionary<string, string> platformSpecificManagedAssemblies)
+    public PluginLoadContext(string pluginPath, Dictionary<string, string> platformSpecificManagedAssemblies = default)
     {
         this.platformSpecificManagedAssemblies = platformSpecificManagedAssemblies;
-        this.pluginPath = Path.GetDirectoryName(pluginPath);
+
+        var path = Path.GetDirectoryName(pluginPath);
         resolver = new AssemblyDependencyResolver(pluginPath);
-        os = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "win" : "unix";
+        platformPath = Path.Combine(path, "runtimes", $"win-{RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant()}", "native");
+
+        var os = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "win" : "unix";
+        libPath = Path.Combine(path, "runtimes", os, "lib");
     }
 
     protected override Assembly Load(AssemblyName assemblyName)
@@ -44,9 +48,9 @@ class PluginLoadContext : AssemblyLoadContext
     string ResolveManagedDllPath(AssemblyName assemblyName)
     {
         var name = assemblyName.Name;
-        if (platformSpecificManagedAssemblies.TryGetValue(name, out var framework))
+        if (platformSpecificManagedAssemblies != null && platformSpecificManagedAssemblies.TryGetValue(name, out var framework))
         {
-            var dllPath = BuildPlatformSpecificAssemblyPath(framework, name);
+            var dllPath = Path.Combine(libPath, framework, $"{name}.dll");
             if (File.Exists(dllPath))
             {
                 return dllPath;
@@ -55,14 +59,10 @@ class PluginLoadContext : AssemblyLoadContext
         return resolver.ResolveAssemblyToPath(assemblyName);
     }
 
-    string BuildPlatformSpecificAssemblyPath(string framework, string assembly)
-    {
-        return Path.Combine(pluginPath, "runtimes", os, "lib", framework, $"{assembly}.dll");
-    }
-
     string ResolveUnmanagedDllPath(string unmanagedDllName)
     {
         string dllPath = resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
+
         if (dllPath != null)
         {
             return dllPath;
@@ -70,7 +70,7 @@ class PluginLoadContext : AssemblyLoadContext
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            dllPath = Path.Combine(pluginPath, "runtimes", $"win-{RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant()}", "native", unmanagedDllName);
+            dllPath = Path.Combine(platformPath, unmanagedDllName);
             if (File.Exists(dllPath))
             {
                 return dllPath;
