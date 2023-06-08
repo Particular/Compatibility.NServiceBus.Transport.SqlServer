@@ -16,17 +16,32 @@ sealed class PluginLoadContext : AssemblyLoadContext
     readonly string libPath;
     readonly AssemblyDependencyResolver resolver;
 
+    // https://learn.microsoft.com/en-us/dotnet/standard/net-standard
     static readonly string[] Frameworks = new[]
     {
+#if NET7_0_OR_GREATER
         "net7.0",
+#endif
+#if NET6_0_OR_GREATER
         "net6.0",
+#endif
+#if NET5_0_OR_GREATER
         "net5.0",
+#endif
+#if NETCOREAPP3_1_OR_GREATER
         "netcoreapp3.1",
+#endif
+#if NETCOREAPP3_0_OR_GREATER
         "netcoreapp3.0",
-        "netcoreapp2.1",
-        "netcoreapp2.0",
         "netstandard2.1",
+#endif
+#if NETCOREAPP2_1_OR_GREATER
+        "netcoreapp2.1",
+#endif
+#if NETCOREAPP2_0_OR_GREATER
+        "netcoreapp2.0",
         "netstandard2.0",
+#endif
     };
 
     public PluginLoadContext(string pluginPath)
