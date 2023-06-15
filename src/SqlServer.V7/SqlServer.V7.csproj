@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <AssemblyName>NServiceBus.Compatibility.SqlServer.V7</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Core.V8\Core.V8.csproj" />
+
+    <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.*" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.*" />
+  </ItemGroup>
+
+</Project>
