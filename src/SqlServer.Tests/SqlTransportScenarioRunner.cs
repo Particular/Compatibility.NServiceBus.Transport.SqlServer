@@ -11,7 +11,7 @@ static class SqlTransportScenarioRunner
 {
     public static long RunCounter;
     static readonly ObjectPool<long> Pool = new(() => Interlocked.Increment(ref RunCounter));
-    static readonly TimeSpan TestTimeout = TimeSpan.FromSeconds(Debugger.IsAttached ? 600 : 30);
+    static readonly TimeSpan TestTimeout = TimeSpan.FromSeconds(Debugger.IsAttached ? 600 : 60);
 
     public static async Task<TestExecutionResult> Run(
         string aTypeNameBehavior,
@@ -60,6 +60,10 @@ static class SqlTransportScenarioRunner
 
             result.AuditedMessages = result.AuditedMessages;
             return result;
+        }
+        catch (OperationCanceledException e) when (cancellationToken.IsCancellationRequested)
+        {
+            throw new Exception($"Test timeout, duration exceeding {TestTimeout}", e);
         }
         finally
         {

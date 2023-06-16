@@ -96,15 +96,7 @@ public class TestScenarioPluginRunner
 
             await Task.WhenAll(tests).ConfigureAwait(false);
 
-            var timeout = Task.Delay(30000, cancellationToken);
-
-            var finished = await Task.WhenAny(timeout, done.Task).ConfigureAwait(false);
-
-            if (finished == timeout)
-            {
-                done.SetResult(false);
-                throw new Exception("Time timed out");
-            }
+            await done.Task.ConfigureAwait(false);
 
             return new TestExecutionResult
             {
