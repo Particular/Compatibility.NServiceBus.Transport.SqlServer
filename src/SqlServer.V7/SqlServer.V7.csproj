@@ -7,11 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\SqlServer.Tests.Sources\MultiCatalogMap.cs" Link="MultiCatalogMap.cs" />
+    <Compile Include="..\SqlServer.Tests.Sources\MultiSchemaMap.cs" Link="MultiSchemaMap.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Core.V8\Core.V8.csproj" />
 
     <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.*" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.*" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Particular.Packaging" Version="3.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NServiceBus.Transport.SqlServer.CompatibilityTests.V7</PackageId>
+    <Description>Wire-compatibility test behaviors for SQL Server transport V7</Description>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <IncludeSourceFilesInPackage>false</IncludeSourceFilesInPackage>
+  </PropertyGroup>
 
 </Project>

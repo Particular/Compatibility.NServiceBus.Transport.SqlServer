@@ -16,4 +16,15 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Particular.Packaging" Version="3.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NServiceBus.TransportCompatibilityTests.V8</PackageId>
+    <Description>Wire-compatibility test adapters for NServiceBus 8</Description>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <IncludeSourceFilesInPackage>false</IncludeSourceFilesInPackage>
+  </PropertyGroup>
+
 </Project>

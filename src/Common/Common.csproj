@@ -7,4 +7,15 @@
     <AssemblyName>NServiceBus.Compatibility.Common</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Particular.Packaging" Version="3.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NServiceBus.TransportCompatibilityTests.Common</PackageId>
+    <Description>Wire-compatibility test common files</Description>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <IncludeSourceFilesInPackage>false</IncludeSourceFilesInPackage>
+  </PropertyGroup>
+
 </Project>

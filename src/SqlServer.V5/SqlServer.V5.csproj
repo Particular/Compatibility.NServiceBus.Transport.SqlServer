@@ -15,4 +15,15 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Particular.Packaging" Version="3.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NServiceBus.Transport.SqlServer.CompatibilityTests.V5</PackageId>
+    <Description>Wire-compatibility test behaviors for SQL Server transport V5</Description>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <IncludeSourceFilesInPackage>false</IncludeSourceFilesInPackage>
+  </PropertyGroup>
+
 </Project>

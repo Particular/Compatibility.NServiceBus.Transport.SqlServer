@@ -1,0 +1,1 @@
+# Wire-compatibility tests sources for SQL Server

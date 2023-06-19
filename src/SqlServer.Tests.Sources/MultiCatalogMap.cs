@@ -1,6 +1,6 @@
 ﻿namespace NServiceBus.Compatibility;
 
-public static class MultiCatalogMap
+static class MultiCatalogMap
 {
     public const string Audit = "nservicebus";
     public const string Sender = "nservicebus2";

@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlServer.V6", "SqlServer.V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlServer.V7", "SqlServer.V7\SqlServer.V7.csproj", "{0600965A-DA19-4137-B141-4EB416264213}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServer.Tests.Sources", "SqlServer.Tests.Sources\SqlServer.Tests.Sources.csproj", "{A3A38D67-42A5-4DA9-A4CD-3C71BBD91867}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{0600965A-DA19-4137-B141-4EB416264213}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0600965A-DA19-4137-B141-4EB416264213}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0600965A-DA19-4137-B141-4EB416264213}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3A38D67-42A5-4DA9-A4CD-3C71BBD91867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3A38D67-42A5-4DA9-A4CD-3C71BBD91867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3A38D67-42A5-4DA9-A4CD-3C71BBD91867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3A38D67-42A5-4DA9-A4CD-3C71BBD91867}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
