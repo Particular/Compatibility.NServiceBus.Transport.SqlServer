@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Diagnostics;
 using NuGet.Versioning;
+using System.Xml.Linq;
 
 class AgentPlugin
 {
@@ -18,7 +19,7 @@ class AgentPlugin
     readonly PluginOptions opts;
     IPlugin plugin;
     bool started;
-    readonly string behaviorCsProjFileName;
+    readonly string behaviorPackageName;
     readonly SemanticVersion versionToTest;
     readonly string transportPackageName;
 
@@ -35,14 +36,13 @@ class AgentPlugin
         PluginOptions opts)
     {
         this.versionToTest = versionToTest;
-        behaviorCsProjFileName = $"SqlServer.V{versionToTest.Major}"; //behaviors depend only on downstream major
+        behaviorPackageName = $"Compatibility.NServiceBus.Transport.SqlServer.V{versionToTest.Major}"; //behaviors depend only on downstream major
         this.behaviorTypeName = behaviorTypeName; //$"{behaviorTypeName}, NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}";
         this.generatedProjectFolder = generatedProjectFolder;
         this.opts = opts;
         transportPackageName = versionToTest.Major > 5 ? "NServiceBus.Transport.SqlServer" : "NServiceBus.SqlServer";
         projectName = $"Agent.{transportPackageName}.{versionToTest.ToNormalizedString()}"; //generated project depends on downstream minor
     }
-
 
     public async Task Compile(CancellationToken cancellationToken = default)
     {
@@ -56,61 +56,63 @@ class AgentPlugin
                 Directory.CreateDirectory(projectFolder);
             }
 
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            var version = fileVersionInfo.ProductVersion;
+
             var projectFilePath = Path.Combine(projectFolder, $"{projectName}.csproj");
             if (!File.Exists(projectFilePath))
             {
-                await File.WriteAllTextAsync(projectFilePath, @$"<Project Sdk=""Microsoft.NET.Sdk"">
+                // Private=""false"" ExcludeAssets=""runtime"" prevent files from copied to the bin folder
+                //
+                // https://learn.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets
+                // https://github.com/dotnet/docs/issues/15811
+                //
+                var commonReference =
+                    $@"<PackageReference Include=""Compatibility.NServiceBus.Common"" Version=""{version}"" Private=""false"" ExcludeAssets=""runtime"" />";
 
-  <PropertyGroup>
-    <TargetFramework>{TargetFramework}</TargetFramework>
-    <RootNamespace>TestAgent</RootNamespace>
-    <EnableDynamicLoading>true</EnableDynamicLoading>
-    <AssemblyName>NServiceBus.Compatibility.{projectName}</AssemblyName>
-  </PropertyGroup>
+                var behaviorReference =
+                    $@"<PackageReference Include=""{behaviorPackageName}"" Version=""{version}"" />";
 
-  <ItemGroup>
-    <ProjectReference Include=""..\..\Common\Common.csproj"" >
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </ProjectReference>
+                var isDevelopment = opts.VersionBeingDeveloped != null && SemanticVersion.Parse(opts.VersionBeingDeveloped).Equals(versionToTest);
+                var transportReference = isDevelopment
+                    ? $@"<ProjectReference Include=""..\..\{transportPackageName}\{transportPackageName}.csproj"" />"
+                    : $@"<PackageReference Include=""{transportPackageName}"" Version=""[{versionToTest.ToNormalizedString()}]"" />";
 
-    <ProjectReference Include=""..\..\{behaviorCsProjFileName}\{behaviorCsProjFileName}.csproj"" />
+                var xml = $@"
+                        <Project Sdk=""Microsoft.NET.Sdk"">
+                          <PropertyGroup>
+                            <TargetFramework>{TargetFramework}</TargetFramework>
+                            <RootNamespace>TestAgent</RootNamespace>
+                            <EnableDynamicLoading>true</EnableDynamicLoading>
+                            <AssemblyName>NServiceBus.Compatibility.{projectName}</AssemblyName>
+                          </PropertyGroup>
+                          <ItemGroup>
+                            {commonReference}
+                            {behaviorReference}
+                            {transportReference}
+                          </ItemGroup>
+                        </Project>
+                        ";
 
-    <PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />
+                var xCsProj = XDocument.Parse(xml);
+                xCsProj.Save(projectFilePath);
 
-  </ItemGroup>
-
-</Project>
-", cancellationToken).ConfigureAwait(false);
             }
 
-            var buildProcess = new Process();
-            buildProcess.StartInfo.FileName = @"dotnet";
-            buildProcess.StartInfo.Arguments = $"build \"{projectFilePath}\"";
-#if !DEBUG
-            buildProcess.StartInfo.Arguments += " --configuration Release";
-#endif
-            buildProcess.StartInfo.UseShellExecute = false;
-            buildProcess.StartInfo.RedirectStandardOutput = true;
-            buildProcess.StartInfo.RedirectStandardError = true;
-            buildProcess.StartInfo.RedirectStandardInput = true;
-            buildProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            buildProcess.StartInfo.CreateNoWindow = true;
 
-            buildProcess.Start();
-
-            await buildProcess.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
-
-            if (buildProcess.ExitCode != 0)
+            try
             {
-                var buildOutput = await buildProcess.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-                await Console.Out.WriteLineAsync(buildOutput).ConfigureAwait(false);
-                throw new Exception("Build failed");
+                await Build(projectFilePath, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e) when (e is OperationCanceledException && !cancellationToken.IsCancellationRequested)
+            {
+                Console.WriteLine($"Build failed for {projectFilePath}, adding to solution for diagnosis");
+                await AddProjectToSolution(projectFilePath, cancellationToken).ConfigureAwait(false);
             }
 
             var folder = Path.GetDirectoryName(projectFilePath);
 
-            var assemblyFileName = $"NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}.dll";
+            var assemblyFileName = $"Compatibility.NServiceBus.Transport.SqlServer.V{versionToTest.Major}.dll";
 
 #if DEBUG
             var path = $"{folder}/bin/Debug/{TargetFramework}/";
@@ -128,6 +130,64 @@ class AgentPlugin
             var behaviorType = pluginAssembly.GetType(behaviorTypeName, true);
             plugin = (IPlugin)Activator.CreateInstance(behaviorType);
         }
+    }
+
+    static async Task Build(string projectFilePath, CancellationToken cancellationToken)
+    {
+        using var process = await RunProcess("dotnet", $"build \"{projectFilePath}\"", cancellationToken).ConfigureAwait(false);
+
+        if (process.ExitCode != 0)
+        {
+            var buildOutput = await process.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+            await Console.Out.WriteLineAsync(buildOutput).ConfigureAwait(false);
+            throw new Exception("Build failed");
+        }
+    }
+
+    static async Task AddProjectToSolution(string projectFilePath, CancellationToken cancellationToken)
+    {
+        // Add to solution https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-sln#add
+        var slnPath = Path.GetFullPath("../../../../Compatibility.SqlServer.sln");
+
+        if (!File.Exists(slnPath))
+        {
+            Console.WriteLine("Not running as part of Compatibility.SqlServer.sln, skip adding");
+            return;
+        }
+
+        using var process = await RunProcess("dotnet", $"sln \"{slnPath}\" add \"{projectFilePath}\"", cancellationToken).ConfigureAwait(false);
+
+        if (process.ExitCode != 0)
+        {
+            var buildOutput = await process.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+            await Console.Out.WriteLineAsync(buildOutput).ConfigureAwait(false);
+            throw new Exception("dotnet sln add failed");
+        }
+    }
+
+    static async Task<Process> RunProcess(
+        string fileName,
+        string arguments,
+        CancellationToken cancellationToken
+        )
+    {
+        var buildProcess = new Process();
+        buildProcess.StartInfo.FileName = fileName;
+        buildProcess.StartInfo.Arguments = arguments;
+#if !DEBUG
+            buildProcess.StartInfo.Arguments += " --configuration Release";
+#endif
+        buildProcess.StartInfo.UseShellExecute = false;
+        buildProcess.StartInfo.RedirectStandardOutput = true;
+        buildProcess.StartInfo.RedirectStandardError = true;
+        buildProcess.StartInfo.RedirectStandardInput = true;
+        buildProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+        buildProcess.StartInfo.CreateNoWindow = true;
+
+        buildProcess.Start();
+
+        await buildProcess.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+        return buildProcess;
     }
 
     public async Task StartEndpoint(CancellationToken cancellationToken = default)

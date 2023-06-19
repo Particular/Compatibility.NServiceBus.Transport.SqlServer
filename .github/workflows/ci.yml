@@ -37,7 +37,7 @@ jobs:
       - name: Install SQL Server
         uses: Particular/install-sql-server-action@v1.0.2
         with:
-          connection-string-env-var: SQLSERVERTRANSPORTCONNECTIONSTRING
+          connection-string-env-var: SqlServerTransportConnectionString
           catalog: nservicebus
       - name: Prepare SQL Server
         shell: pwsh

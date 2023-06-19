@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using NuGet.Common;
 using NuGet.Configuration;
@@ -9,10 +11,28 @@ using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 
-static class GeneratedVersionsSet
+static partial class GeneratedVersionsSet
 {
     static readonly SourceCacheContext cache = new() { NoCache = true };
     static readonly string[] sources;
+    internal static NuGetVersion VersionFilter;
+
+    [ModuleInitializer]
+    public static void SetVersionFilter()
+    {
+        const string DefaultVersionTextWithoutCommitInfo = "1.0.0";
+
+        var versionText = Assembly
+            .GetExecutingAssembly()
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            .InformationalVersion;
+
+        if (versionText != DefaultVersionTextWithoutCommitInfo)
+        {
+            var version = NuGetVersion.Parse(versionText);
+            VersionFilter = version;
+        }
+    }
 
     static GeneratedVersionsSet()
     {
@@ -79,12 +99,35 @@ static class GeneratedVersionsSet
 
         latestMinors.Add(last);
 
-        foreach (var a in latestMinors)
+        if (VersionFilter != null)
         {
-            foreach (var b in latestMinors)
+            if (versionRange.Satisfies(VersionFilter))
             {
-                yield return new object[] { a, b };
+                foreach (var a in latestMinors)
+                {
+                    yield return new object[] { VersionFilter, a };
+                }
+            }
+        }
+        else
+        {
+            foreach (var a in latestMinors)
+            {
+                foreach (var b in latestMinors)
+                {
+                    var isMatch = VersionFilter is null || IsMinorMatch(VersionFilter, a) || IsMinorMatch(VersionFilter, b);
+                    if (isMatch)
+                    {
+                        yield return new object[] { a, b };
+                    }
+                }
             }
         }
     }
+
+    static bool IsMinorMatch(NuGetVersion a, NuGetVersion b)
+    {
+        return a.Major == b.Major && a.Minor == b.Minor;
+    }
+
 }

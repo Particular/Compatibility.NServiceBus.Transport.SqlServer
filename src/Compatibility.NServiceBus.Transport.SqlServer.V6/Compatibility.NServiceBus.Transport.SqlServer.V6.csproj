@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <NoWarn>PS0018,PS0013</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SqlServer.Tests.Sources\MultiCatalogMap.cs" Link="MultiCatalogMap.cs" />
+    <Compile Include="..\SqlServer.Tests.Sources\MultiSchemaMap.cs" Link="MultiSchemaMap.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NServiceBus.Transport.SqlServer" Version="6.*" PrivateAssets="All" /><!--DO NOT BUMP VERSION -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Particular.Packaging" Version="3.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Compatibility.NServiceBus.Common.csproj" />
+    <ProjectReference Include="..\Core.V7\Compatibility.NServiceBus.Core.V7.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Description>Wire-compatibility test behaviors for SQL Server transport V6</Description>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <IncludeSourceFilesInPackage>false</IncludeSourceFilesInPackage>
+  </PropertyGroup>
+
+</Project>
