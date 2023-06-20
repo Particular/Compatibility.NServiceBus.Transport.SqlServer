@@ -9,8 +9,14 @@ using NServiceBus.Raw;
 using System.IO;
 using NServiceBus.Transport;
 
+/// <summary>
+/// Wire compatibility test runner
+/// </summary>
 public class TestScenarioPluginRunner
 {
+    /// <summary>
+    /// Runs the test
+    /// </summary>
     public static async Task<TestExecutionResult> Run(
         PluginOptions opts,
         AgentInfo[] agents,

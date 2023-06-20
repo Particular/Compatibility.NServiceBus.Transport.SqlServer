@@ -41,6 +41,26 @@ class AgentPlugin
         this.opts = opts;
         transportPackageName = versionToTest.Major > 5 ? "NServiceBus.Transport.SqlServer" : "NServiceBus.SqlServer";
         projectName = $"Agent.{transportPackageName}.{versionToTest.ToNormalizedString()}"; //generated project depends on downstream minor
+
+        var commonProjectReference = @"
+    <ProjectReference Include=""..\..\Common\Common.csproj"" >
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
+";
+        var commonPackageReference = @"
+    <PackageReference Include=""NServiceBus.TransportCompatibilityTests.Common"" Version=""*"">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+";
+
+        var behaviorProjectReference = $@"
+    <ProjectReference Include=""..\..\{behaviorCsProjFileName}\{behaviorCsProjFileName}.csproj"" />
+";
+        var behaviorPackagetReference = $@"
+    <PackageReference Include=""NServiceBus.Transport.SqlServer.CompatibilityTests.V{versionToTest.Major}"" Version=""*"" />
+";
     }
 
 
