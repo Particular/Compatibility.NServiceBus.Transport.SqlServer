@@ -18,7 +18,7 @@ class AgentPlugin
     readonly PluginOptions opts;
     IPlugin plugin;
     bool started;
-    readonly string behaviorCsProjFileName;
+    readonly string behaviorPackageName;
     readonly SemanticVersion versionToTest;
     readonly string transportPackageName;
 
@@ -35,7 +35,7 @@ class AgentPlugin
         PluginOptions opts)
     {
         this.versionToTest = versionToTest;
-        behaviorCsProjFileName = $"SqlServer.V{versionToTest.Major}"; //behaviors depend only on downstream major
+        behaviorPackageName = $"NServiceBus.Transport.SqlServer.CompatibilityTests.V{versionToTest.Major}"; //behaviors depend only on downstream major
         this.behaviorTypeName = behaviorTypeName; //$"{behaviorTypeName}, NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}";
         this.generatedProjectFolder = generatedProjectFolder;
         this.opts = opts;
@@ -56,10 +56,10 @@ class AgentPlugin
 ";
 
         var behaviorProjectReference = $@"
-    <ProjectReference Include=""..\..\{behaviorCsProjFileName}\{behaviorCsProjFileName}.csproj"" />
+    <ProjectReference Include=""..\..\{behaviorPackageName}\{behaviorPackageName}.csproj"" />
 ";
         var behaviorPackagetReference = $@"
-    <PackageReference Include=""NServiceBus.Transport.SqlServer.CompatibilityTests.V{versionToTest.Major}"" Version=""*"" />
+    <PackageReference Include=""{behaviorPackageName}"" Version=""*"" />
 ";
     }
 
@@ -94,7 +94,7 @@ class AgentPlugin
       <ExcludeAssets>runtime</ExcludeAssets>
     </ProjectReference>
 
-    <ProjectReference Include=""..\..\{behaviorCsProjFileName}\{behaviorCsProjFileName}.csproj"" />
+    <ProjectReference Include=""..\..\{behaviorPackageName}\{behaviorPackageName}.csproj"" />
 
     <PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />
 

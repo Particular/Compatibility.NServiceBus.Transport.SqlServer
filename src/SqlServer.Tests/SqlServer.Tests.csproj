@@ -18,6 +18,7 @@
     <Compile Include="..\SqlServer.Tests.Sources\SqlHelper.cs" Link="SqlHelper.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\SqlTransportScenarioRunner.cs" Link="SqlTransportScenarioRunner.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\TestCaseSourceVersionsAttribute.cs" Link="TestCaseSourceVersionsAttribute.cs" />
+    <Compile Include="..\SqlServer.Tests.Sources\TestRunContext.cs" Link="TestRunContext.cs" />
   </ItemGroup>
 
   <ItemGroup>
