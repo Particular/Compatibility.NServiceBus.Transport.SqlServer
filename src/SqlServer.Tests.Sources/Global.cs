@@ -1,5 +1,4 @@
 ﻿using System;
-using NuGet.Versioning;
 
 static class Global
 {
