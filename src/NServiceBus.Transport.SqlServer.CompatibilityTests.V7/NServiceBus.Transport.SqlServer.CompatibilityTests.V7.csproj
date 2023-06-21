@@ -16,7 +16,6 @@
     <PackageReference Include="NServiceBus.TransportCompatibilityTests.V8" Version="0-*" />
 
     <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.*" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.*" />
   </ItemGroup>
 
   <ItemGroup>
