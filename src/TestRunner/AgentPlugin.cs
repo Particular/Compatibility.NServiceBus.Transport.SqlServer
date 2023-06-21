@@ -75,6 +75,8 @@ class AgentPlugin
 
     <PackageReference Include=""{behaviorPackageName}"" Version=""0-*"" />
 
+    <PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />
+
     <PackageReference Include=""NServiceBus.TransportCompatibilityTests.Common"" Version=""0-*"">
         <Private>false</Private>
         <ExcludeAssets>runtime</ExcludeAssets>
