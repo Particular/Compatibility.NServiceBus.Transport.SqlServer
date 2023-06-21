@@ -68,10 +68,6 @@ class AgentPlugin
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include=""..\..\Common\Common.csproj"" >
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </ProjectReference>
 
     <PackageReference Include=""{behaviorPackageName}"" Version=""0-*"" />
 
