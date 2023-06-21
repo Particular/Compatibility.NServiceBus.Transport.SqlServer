@@ -11,7 +11,7 @@
     <PackageReference Include="NServiceBus.TransportCompatibilityTests.Common" Version="0-*" />
     <PackageReference Include="NServiceBus.TransportCompatibilityTests.V7" Version="0-*" />
 
-    <PackageReference Include="NServiceBus.SqlServer" Version="5.*" />
+    <PackageReference Include="NServiceBus.SqlServer" Version="[5.0.1,6-a)" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
