@@ -13,6 +13,9 @@ static class GeneratedVersionsSet
 {
     static readonly SourceCacheContext cache = new() { NoCache = true };
     static readonly string[] sources;
+#pragma warning disable CS0649 // Field 'GeneratedVersionsSet.Filter' is never assigned to, and will always have its default value null
+    public static NuGetVersion Filter;
+#pragma warning restore CS0649 // Field 'GeneratedVersionsSet.Filter' is never assigned to, and will always have its default value null
 
     static GeneratedVersionsSet()
     {
@@ -83,8 +86,18 @@ static class GeneratedVersionsSet
         {
             foreach (var b in latestMinors)
             {
-                yield return new object[] { a, b };
+                var isMatch = Filter is null || IsMinorMatch(Filter, a) || IsMinorMatch(Filter, b);
+                if (isMatch)
+                {
+                    yield return new object[] { a, b };
+                }
             }
         }
     }
+
+    static bool IsMinorMatch(NuGetVersion a, NuGetVersion b)
+    {
+        return a.Major == b.Major && a.Minor == b.Minor;
+    }
+
 }
