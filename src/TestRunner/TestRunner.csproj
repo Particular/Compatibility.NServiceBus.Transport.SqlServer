@@ -8,11 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="NServiceBus.Raw" Version="4.0.0" />
+    <PackageReference Include="NServiceBus.TransportCompatibilityTests.Common" Version="0-*" />
     <PackageReference Include="NuGet.Versioning" Version="6.6.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

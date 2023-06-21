@@ -10,10 +10,7 @@
   <ItemGroup>
     <PackageReference Include="NServiceBus" Version="7.*"  />
     <PackageReference Include="NServiceBus.AcceptanceTesting" Version="7.*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <PackageReference Include="NServiceBus.TransportCompatibilityTests.Common" Version="0-*" />
   </ItemGroup>
 
   <ItemGroup>

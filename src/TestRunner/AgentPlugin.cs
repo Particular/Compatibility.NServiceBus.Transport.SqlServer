@@ -73,9 +73,12 @@ class AgentPlugin
       <ExcludeAssets>runtime</ExcludeAssets>
     </ProjectReference>
 
-    <ProjectReference Include=""..\..\{behaviorPackageName}\{behaviorPackageName}.csproj"" />
+    <PackageReference Include=""{behaviorPackageName}"" Version=""*"" />
 
-    <PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />
+    <PackageReference Include=""NServiceBus.TransportCompatibilityTests.Common"" Version=""*"">
+        <Private>false</Private>
+        <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
 
   </ItemGroup>
 

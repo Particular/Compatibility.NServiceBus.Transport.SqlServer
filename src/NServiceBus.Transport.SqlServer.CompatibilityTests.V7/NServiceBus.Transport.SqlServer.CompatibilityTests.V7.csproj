@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Core.V8\Core.V8.csproj" />
+    <PackageReference Include="NServiceBus.TransportCompatibilityTests.Common" Version="0-*" />
+    <PackageReference Include="NServiceBus.TransportCompatibilityTests.V8" Version="0-*" />
 
     <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.*" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.*" />
