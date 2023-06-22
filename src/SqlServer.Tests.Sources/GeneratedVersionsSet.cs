@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using NuGet.Common;
 using NuGet.Configuration;
@@ -9,13 +11,28 @@ using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 
-static class GeneratedVersionsSet
+static partial class GeneratedVersionsSet
 {
     static readonly SourceCacheContext cache = new() { NoCache = true };
     static readonly string[] sources;
-#pragma warning disable CS0649 // Field 'GeneratedVersionsSet.Filter' is never assigned to, and will always have its default value null
-    public static NuGetVersion Filter;
-#pragma warning restore CS0649 // Field 'GeneratedVersionsSet.Filter' is never assigned to, and will always have its default value null
+    static NuGetVersion VersionFilter;
+
+    [ModuleInitializer]
+    public static void SetVersionFilter()
+    {
+        const string DefaultVersionTextWithoutCommitInfo = "1.0.0";
+
+        var versionText = Assembly
+            .GetExecutingAssembly()
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            .InformationalVersion;
+
+        if (versionText != DefaultVersionTextWithoutCommitInfo)
+        {
+            var version = NuGetVersion.Parse(versionText);
+            VersionFilter = version;
+        }
+    }
 
     static GeneratedVersionsSet()
     {
@@ -86,7 +103,7 @@ static class GeneratedVersionsSet
         {
             foreach (var b in latestMinors)
             {
-                var isMatch = Filter is null || IsMinorMatch(Filter, a) || IsMinorMatch(Filter, b);
+                var isMatch = VersionFilter is null || IsMinorMatch(VersionFilter, a) || IsMinorMatch(VersionFilter, b);
                 if (isMatch)
                 {
                     yield return new object[] { a, b };
