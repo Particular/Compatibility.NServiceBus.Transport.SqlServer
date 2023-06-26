@@ -4,7 +4,6 @@
     <TargetFramework>net7.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <NoWarn>PS0018,PS0013</NoWarn>
-    <AssemblyName>NServiceBus.Compatibility.SqlServer.V6</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus.TransportCompatibilityTests.Common" Version="0-*" />
-    <PackageReference Include="NServiceBus.TransportCompatibilityTests.V7" Version="0-*" />
+    <PackageReference Include="Compatibility.NServiceBus.Common" Version="0-*" />
+    <PackageReference Include="Compatibility.NServiceBus.Core.V7" Version="0-*" />
 
     <PackageReference Include="NServiceBus.Transport.SqlServer" Version="6.*" PrivateAssets="All" />
   </ItemGroup>
@@ -24,7 +23,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>NServiceBus.Transport.SqlServer.CompatibilityTests.V6</PackageId>
     <Description>Wire-compatibility test behaviors for SQL Server transport V6</Description>
     <IncludeBuildOutput>true</IncludeBuildOutput>
     <IncludeSourceFilesInPackage>false</IncludeSourceFilesInPackage>

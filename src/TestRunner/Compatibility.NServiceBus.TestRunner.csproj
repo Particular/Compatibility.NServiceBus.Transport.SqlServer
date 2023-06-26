@@ -1,14 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <LangVersion>10</LangVersion>
-    <AssemblyName>NServiceBus.Compatibility.TestRunner</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NServiceBus.Raw" Version="4.0.0" />
-    <PackageReference Include="NServiceBus.TransportCompatibilityTests.Common" Version="0-*" />
+    <PackageReference Include="Compatibility.NServiceBus.Common" Version="0-*" />
     <PackageReference Include="NuGet.Versioning" Version="6.6.1" />
   </ItemGroup>
 
@@ -17,7 +16,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>NServiceBus.TransportCompatibilityTests.Runner</PackageId>
     <Description>Wire-compatibility test runner</Description>
     <IncludeBuildOutput>true</IncludeBuildOutput>
     <IncludeSourceFilesInPackage>false</IncludeSourceFilesInPackage>

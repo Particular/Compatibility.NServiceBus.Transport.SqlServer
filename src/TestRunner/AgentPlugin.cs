@@ -35,7 +35,7 @@ class AgentPlugin
         PluginOptions opts)
     {
         this.versionToTest = versionToTest;
-        behaviorPackageName = $"NServiceBus.Transport.SqlServer.CompatibilityTests.V{versionToTest.Major}"; //behaviors depend only on downstream major
+        behaviorPackageName = $"Compatibility.NServiceBus.Transport.SqlServer.V{versionToTest.Major}"; //behaviors depend only on downstream major
         this.behaviorTypeName = behaviorTypeName; //$"{behaviorTypeName}, NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}";
         this.generatedProjectFolder = generatedProjectFolder;
         this.opts = opts;
@@ -73,7 +73,7 @@ class AgentPlugin
 
     <PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />
 
-    <PackageReference Include=""NServiceBus.TransportCompatibilityTests.Common"" Version=""0-*"">
+    <PackageReference Include=""Compatibility.NServiceBus.Common"" Version=""0-*"">
         <Private>false</Private>
         <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
@@ -110,7 +110,7 @@ class AgentPlugin
 
             var folder = Path.GetDirectoryName(projectFilePath);
 
-            var assemblyFileName = $"NServiceBus.Compatibility.SqlServer.V{versionToTest.Major}.dll";
+            var assemblyFileName = $"Compatibility.NServiceBus.Transport.SqlServer.V{versionToTest.Major}.dll";
 
 #if DEBUG
             var path = $"{folder}/bin/Debug/{TargetFramework}/";

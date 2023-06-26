@@ -1,10 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>NServiceBus.Compatibility.Common</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +11,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>NServiceBus.TransportCompatibilityTests.Common</PackageId>
     <Description>Wire-compatibility test common files</Description>
     <IncludeBuildOutput>true</IncludeBuildOutput>
     <IncludeSourceFilesInPackage>false</IncludeSourceFilesInPackage>

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <NoWarn>PS0018</NoWarn>
-    <AssemblyName>NServiceBus.Compatibility.SqlServer.Tests</AssemblyName>
+    <AssemblyName>Compatibility.NServiceBus.SqlServer.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestRunner\TestRunner.csproj" />
+    <ProjectReference Include="..\TestRunner\Compatibility.NServiceBus.TestRunner.csproj" />
   </ItemGroup>
 
   <ItemGroup>

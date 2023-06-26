@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <AssemblyName>NServiceBus.Compatibility.Core.V8</AssemblyName>
     <NoWarn>PS0018,PS0013</NoWarn>
   </PropertyGroup>
 
@@ -10,7 +9,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="NServiceBus" Version="8.*" />
     <PackageReference Include="NServiceBus.AcceptanceTesting" Version="8.*" />
-    <PackageReference Include="NServiceBus.TransportCompatibilityTests.Common" Version="0-*" />
+    <PackageReference Include="Compatibility.NServiceBus.Common" Version="0-*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +17,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageId>NServiceBus.TransportCompatibilityTests.V8</PackageId>
     <Description>Wire-compatibility test adapters for NServiceBus 8</Description>
     <IncludeBuildOutput>true</IncludeBuildOutput>
     <IncludeSourceFilesInPackage>false</IncludeSourceFilesInPackage>
