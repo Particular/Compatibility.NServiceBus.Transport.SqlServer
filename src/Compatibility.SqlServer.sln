@@ -36,25 +36,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.Transport.SqlServer.TestsSources", "SqlServer.Tests.Sources\Compatibility.NServiceBus.Transport.SqlServer.TestsSources.csproj", "{A3A38D67-42A5-4DA9-A4CD-3C71BBD91867}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.Transport.SqlServer.V4", "NServiceBus.Transport.SqlServer.CompatibilityTests.V4\Compatibility.NServiceBus.Transport.SqlServer.V4.csproj", "{27DAB95B-E55C-4AC7-AFED-D4A7DA8770CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.Transport.SqlServer.V4", "Compatibility.NServiceBus.Transport.SqlServer.V4\Compatibility.NServiceBus.Transport.SqlServer.V4.csproj", "{27DAB95B-E55C-4AC7-AFED-D4A7DA8770CD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9811BFA0-1BB5-46D9-B94B-C0FE7FE1CC1B} = {9811BFA0-1BB5-46D9-B94B-C0FE7FE1CC1B}
 		{DEF5E031-DFA1-40ED-ABB2-3E377510D58B} = {DEF5E031-DFA1-40ED-ABB2-3E377510D58B}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.Transport.SqlServer.V5", "NServiceBus.Transport.SqlServer.CompatibilityTests.V5\Compatibility.NServiceBus.Transport.SqlServer.V5.csproj", "{B3005155-B746-4ED0-AC2B-C9F40361BE41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.Transport.SqlServer.V5", "Compatibility.NServiceBus.Transport.SqlServer.V5\Compatibility.NServiceBus.Transport.SqlServer.V5.csproj", "{B3005155-B746-4ED0-AC2B-C9F40361BE41}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9811BFA0-1BB5-46D9-B94B-C0FE7FE1CC1B} = {9811BFA0-1BB5-46D9-B94B-C0FE7FE1CC1B}
 		{DEF5E031-DFA1-40ED-ABB2-3E377510D58B} = {DEF5E031-DFA1-40ED-ABB2-3E377510D58B}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.Transport.SqlServer.V6", "NServiceBus.Transport.SqlServer.CompatibilityTests.V6\Compatibility.NServiceBus.Transport.SqlServer.V6.csproj", "{334AE551-AFB0-499D-B04E-BCBE6B870E47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.Transport.SqlServer.V6", "Compatibility.NServiceBus.Transport.SqlServer.V6\Compatibility.NServiceBus.Transport.SqlServer.V6.csproj", "{334AE551-AFB0-499D-B04E-BCBE6B870E47}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9811BFA0-1BB5-46D9-B94B-C0FE7FE1CC1B} = {9811BFA0-1BB5-46D9-B94B-C0FE7FE1CC1B}
 		{DEF5E031-DFA1-40ED-ABB2-3E377510D58B} = {DEF5E031-DFA1-40ED-ABB2-3E377510D58B}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.Transport.SqlServer.V7", "NServiceBus.Transport.SqlServer.CompatibilityTests.V7\Compatibility.NServiceBus.Transport.SqlServer.V7.csproj", "{13074269-49ED-4BC1-BA03-7B217836342E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compatibility.NServiceBus.Transport.SqlServer.V7", "Compatibility.NServiceBus.Transport.SqlServer.V7\Compatibility.NServiceBus.Transport.SqlServer.V7.csproj", "{13074269-49ED-4BC1-BA03-7B217836342E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9811BFA0-1BB5-46D9-B94B-C0FE7FE1CC1B} = {9811BFA0-1BB5-46D9-B94B-C0FE7FE1CC1B}
 		{B769FED5-B81D-4ABE-B308-19F0FD97095E} = {B769FED5-B81D-4ABE-B308-19F0FD97095E}

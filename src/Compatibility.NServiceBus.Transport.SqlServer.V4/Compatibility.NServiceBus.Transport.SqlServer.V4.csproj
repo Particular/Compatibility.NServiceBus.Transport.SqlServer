@@ -7,14 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Compatibility.NServiceBus.Common" Version="0-*" />
-    <PackageReference Include="Compatibility.NServiceBus.Core.V7" Version="0-*" />
-
     <PackageReference Include="NServiceBus.SqlServer" Version="4.*" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Particular.Packaging" Version="3.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Compatibility.NServiceBus.Common.csproj" />
+    <ProjectReference Include="..\Core.V7\Compatibility.NServiceBus.Core.V7.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

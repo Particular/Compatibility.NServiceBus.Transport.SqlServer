@@ -11,6 +11,11 @@ public class PluginOptions
     public string? AuditQueue { get; set; }
 
     /// <summary>
+    /// Should the test runner emit projects that use package references?
+    /// </summary>
+    public bool UsePackageReferences { get; set; }
+
+    /// <summary>
     /// Transport connection strings
     /// </summary>
     public Dictionary<string, string>? ConnectionStrings { get; set; }

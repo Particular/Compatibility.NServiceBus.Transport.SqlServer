@@ -9,11 +9,14 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="NServiceBus" Version="8.*" />
     <PackageReference Include="NServiceBus.AcceptanceTesting" Version="8.*" />
-    <PackageReference Include="Compatibility.NServiceBus.Common" Version="0-*" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Particular.Packaging" Version="3.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Compatibility.NServiceBus.Common.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

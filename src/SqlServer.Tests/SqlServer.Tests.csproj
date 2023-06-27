@@ -3,13 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <NoWarn>PS0018</NoWarn>
-    <AssemblyName>Compatibility.NServiceBus.SqlServer.Tests</AssemblyName>
+    <AssemblyName>NServiceBus.Compatibility.SqlServer.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\SqlServer.Tests.Sources\GeneratedVersionsSet.cs" Link="GeneratedVersionsSet.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\Global.cs" Link="Global.cs" />
-    <Compile Include="..\SqlServer.Tests.Sources\ITestRunContext.cs" Link="ITestRunContext.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\MultiCatalogMap.cs" Link="MultiCatalogMap.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\MultiSchemaMap.cs" Link="MultiSchemaMap.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\ObjectPool.cs" Link="ObjectPool.cs" />
@@ -19,18 +18,27 @@
     <Compile Include="..\SqlServer.Tests.Sources\SqlHelper.cs" Link="SqlHelper.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\SqlTransportScenarioRunner.cs" Link="SqlTransportScenarioRunner.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\TestCaseSourceVersionsAttribute.cs" Link="TestCaseSourceVersionsAttribute.cs" />
+    <Compile Include="..\SqlServer.Tests.Sources\TestRunContext.cs" Link="TestRunContext.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestRunner\Compatibility.NServiceBus.TestRunner.csproj" />
+    <ProjectReference Include="..\TestRunner\TestRunner.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+    <PackageReference Include="NuGet.Protocol" Version="6.6.1" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="2.3.2" />
+=======
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" PrivateAssets="All" />
     <PackageReference Include="NuGet.Protocol" Version="6.6.1" />
     <PackageReference Include="NUnit" Version="[3.13.3, 4.0.0)" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" PrivateAssets="All" />
     <PackageReference Include="GitHubActionsTestLogger" Version="2.3.2" PrivateAssets="All" />
+>>>>>>> 2d796ae (Spike bringing tests via myget)
     <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.*" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
