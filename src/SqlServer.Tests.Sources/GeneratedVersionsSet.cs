@@ -15,7 +15,7 @@ static partial class GeneratedVersionsSet
 {
     static readonly SourceCacheContext cache = new() { NoCache = true };
     static readonly string[] sources;
-    static NuGetVersion VersionFilter;
+    internal static NuGetVersion VersionFilter;
 
     [ModuleInitializer]
     public static void SetVersionFilter()

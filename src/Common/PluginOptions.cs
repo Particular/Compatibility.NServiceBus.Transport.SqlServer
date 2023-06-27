@@ -31,6 +31,11 @@ public class PluginOptions
     public long? RunCount { get; set; }
 
     /// <summary>
+    /// Version that is being developed and needs to be replaced with a project reference
+    /// </summary>
+    public string? VersionBeingDeveloped { get; set; }
+
+    /// <summary>
     /// Generates a unique prefix for the test run.
     /// </summary>
     public string ApplyUniqueRunPrefix(string text)

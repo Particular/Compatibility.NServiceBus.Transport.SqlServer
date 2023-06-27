@@ -80,7 +80,7 @@ class AgentPlugin
     <ProjectReference Include=""..\..\{behaviorPackageName}\{behaviorPackageName}.csproj"" />
 ";
 
-                var transportReference = opts.RunningInMainRepo
+                var transportReference = opts.VersionBeingDeveloped != null && SemanticVersion.Parse(opts.VersionBeingDeveloped).Equals(versionToTest)
                     ? $@"
     <ProjectReference Include=""..\..\{transportPackageName}\{transportPackageName}.csproj"" />
 "
