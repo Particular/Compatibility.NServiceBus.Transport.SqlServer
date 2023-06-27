@@ -69,7 +69,7 @@ static partial class GeneratedVersionsSet
 
         // Get all minors
         var versions = versionSet
-            .Where(v => (!v.IsPrerelease || v.Release.StartsWith("rc.") || v.Release.StartsWith("beta.") || v.Release.StartsWith("alpha.")) && versionRange.Satisfies(v))
+            .Where(v => !v.IsPrerelease && versionRange.Satisfies(v))
             .OrderBy(v => v)
             .ToArray();
 
@@ -99,14 +99,24 @@ static partial class GeneratedVersionsSet
 
         latestMinors.Add(last);
 
-        foreach (var a in latestMinors)
+        if (VersionFilter != null)
         {
-            foreach (var b in latestMinors)
+            foreach (var a in latestMinors)
             {
-                var isMatch = VersionFilter is null || IsMinorMatch(VersionFilter, a) || IsMinorMatch(VersionFilter, b);
-                if (isMatch)
+                yield return new object[] { VersionFilter, a };
+            }
+        }
+        else
+        {
+            foreach (var a in latestMinors)
+            {
+                foreach (var b in latestMinors)
                 {
-                    yield return new object[] { a, b };
+                    var isMatch = VersionFilter is null || IsMinorMatch(VersionFilter, a) || IsMinorMatch(VersionFilter, b);
+                    if (isMatch)
+                    {
+                        yield return new object[] { a, b };
+                    }
                 }
             }
         }
