@@ -101,9 +101,12 @@ static partial class GeneratedVersionsSet
 
         if (VersionFilter != null)
         {
-            foreach (var a in latestMinors)
+            if (versionRange.Satisfies(VersionFilter))
             {
-                yield return new object[] { VersionFilter, a };
+                foreach (var a in latestMinors)
+                {
+                    yield return new object[] { VersionFilter, a };
+                }
             }
         }
         else
