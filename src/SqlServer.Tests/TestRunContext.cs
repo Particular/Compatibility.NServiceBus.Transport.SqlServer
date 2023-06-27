@@ -1,5 +1,5 @@
 ﻿public class TestRunContext : ITestRunContext
 {
-    public bool UsePackageReferences => false;
+    public bool RunningInMainRepo => false;
 }
 

@@ -1,4 +1,4 @@
 ﻿public interface ITestRunContext
 {
-    bool UsePackageReferences { get; }
+    bool RunningInMainRepo { get; }
 }

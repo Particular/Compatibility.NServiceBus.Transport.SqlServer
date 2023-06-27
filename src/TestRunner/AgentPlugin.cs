@@ -58,7 +58,7 @@ class AgentPlugin
             var projectFilePath = Path.Combine(projectFolder, $"{projectName}.csproj");
             if (!File.Exists(projectFilePath))
             {
-                var commonReference = opts.UsePackageReferences
+                var commonReference = opts.RunningInMainRepo
                     ? @"
     <PackageReference Include=""Compatibility.NServiceBus.Common"" Version=""0-*"">
       <Private>false</Private>
@@ -72,12 +72,20 @@ class AgentPlugin
     </ProjectReference>
 ";
 
-                var behaviorReference = opts.UsePackageReferences
+                var behaviorReference = opts.RunningInMainRepo
                     ? $@"
     <PackageReference Include=""{behaviorPackageName}"" Version=""0-*"" />
 "
                     : $@"
     <ProjectReference Include=""..\..\{behaviorPackageName}\{behaviorPackageName}.csproj"" />
+";
+
+                var transportReference = opts.RunningInMainRepo
+                    ? $@"
+    <ProjectReference Include=""..\..\{transportPackageName}\{transportPackageName}.csproj"" />
+"
+                    : $@"
+    <PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />
 ";
 
                 await File.WriteAllTextAsync(projectFilePath, @$" <Project Sdk=""Microsoft.NET.Sdk"">
@@ -92,7 +100,7 @@ class AgentPlugin
   <ItemGroup>
 {commonReference}
 {behaviorReference}
-    <PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />
+{transportReference}
   </ItemGroup>
 
 </Project>
