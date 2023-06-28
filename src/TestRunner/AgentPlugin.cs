@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Diagnostics;
 using NuGet.Versioning;
+using System.Xml.Linq;
 
 class AgentPlugin
 {
@@ -55,56 +56,47 @@ class AgentPlugin
                 Directory.CreateDirectory(projectFolder);
             }
 
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            var version = fileVersionInfo.ProductVersion;
+
             var projectFilePath = Path.Combine(projectFolder, $"{projectName}.csproj");
             if (!File.Exists(projectFilePath))
             {
+                // Private=""false"" ExcludeAssets=""runtime"" prevent files from copied to the bin folder
+                //
+                // https://learn.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets
+                // https://github.com/dotnet/docs/issues/15811
+                //
                 var commonReference = opts.RunningInMainRepo
-                    ? @"
-    <PackageReference Include=""Compatibility.NServiceBus.Common"" Version=""0-*"">
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-"
-                    : @"
-    <ProjectReference Include=""..\..\Common\Compatibility.NServiceBus.Common.csproj"" >
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </ProjectReference>
-";
+                    ? $@"<PackageReference Include=""Compatibility.NServiceBus.Common"" Version=""{version}"" Private=""false"" ExcludeAssets=""runtime"" />"
+                    : $@"<ProjectReference Include=""..\..\Common\Compatibility.NServiceBus.Common.csproj"" Private=""false"" ExcludeAssets=""runtime"" />";
 
                 var behaviorReference = opts.RunningInMainRepo
-                    ? $@"
-    <PackageReference Include=""{behaviorPackageName}"" Version=""0-*"" />
-"
-                    : $@"
-    <ProjectReference Include=""..\..\{behaviorPackageName}\{behaviorPackageName}.csproj"" />
-";
+                    ? $@"<PackageReference Include=""{behaviorPackageName}"" Version=""{version}"" />"
+                    : $@"<ProjectReference Include=""..\..\{behaviorPackageName}\{behaviorPackageName}.csproj"" />";
 
                 var transportReference = opts.VersionBeingDeveloped != null && SemanticVersion.Parse(opts.VersionBeingDeveloped).Equals(versionToTest)
-                    ? $@"
-    <ProjectReference Include=""..\..\{transportPackageName}\{transportPackageName}.csproj"" />
-"
-                    : $@"
-    <PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />
-";
+                    ? $@"<ProjectReference Include=""..\..\{transportPackageName}\{transportPackageName}.csproj"" />"
+                    : $@"<PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />";
 
-                await File.WriteAllTextAsync(projectFilePath, @$" <Project Sdk=""Microsoft.NET.Sdk"">
+                var xml = $@"
+                        <Project Sdk=""Microsoft.NET.Sdk"">
+                          <PropertyGroup>
+                            <TargetFramework>{TargetFramework}</TargetFramework>
+                            <RootNamespace>TestAgent</RootNamespace>
+                            <EnableDynamicLoading>true</EnableDynamicLoading>
+                            <AssemblyName>NServiceBus.Compatibility.{projectName}</AssemblyName>
+                          </PropertyGroup>
+                          <ItemGroup>
+                            {commonReference}
+                            {behaviorReference}
+                            {transportReference}
+                          </ItemGroup>
+                        </Project>
+                        ";
 
-  <PropertyGroup>
-    <TargetFramework>{TargetFramework}</TargetFramework>
-    <RootNamespace>TestAgent</RootNamespace>
-    <EnableDynamicLoading>true</EnableDynamicLoading>
-    <AssemblyName>NServiceBus.Compatibility.{projectName}</AssemblyName>
-  </PropertyGroup>
-
-  <ItemGroup>
-{commonReference}
-{behaviorReference}
-{transportReference}
-  </ItemGroup>
-
-</Project>
-", cancellationToken).ConfigureAwait(false);
+                var xCsProj = XDocument.Parse(xml);
+                xCsProj.Save(projectFilePath);
             }
 
             var buildProcess = new Process();
