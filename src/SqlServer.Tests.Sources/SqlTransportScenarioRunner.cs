@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using NServiceBus.Logging;
 using NuGet.Versioning;
 
 static class SqlTransportScenarioRunner
@@ -12,6 +13,11 @@ static class SqlTransportScenarioRunner
     public static long RunCounter;
     static readonly ObjectPool<long> Pool = new(() => Interlocked.Increment(ref RunCounter));
     static readonly TimeSpan TestTimeout = TimeSpan.FromSeconds(Debugger.IsAttached ? 600 : 60);
+
+    static SqlTransportScenarioRunner()
+    {
+        LogManager.Use<DefaultFactory>().Level(LogLevel.Error);
+    }
 
     public static async Task<TestExecutionResult> Run(
         string aTypeNameBehavior,

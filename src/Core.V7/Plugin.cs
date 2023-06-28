@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.AcceptanceTesting.Customization;
+using NServiceBus.Logging;
 using NServiceBus.Transport;
 
 /// <summary>
@@ -24,6 +25,8 @@ public abstract class Plugin : IPlugin
         PluginOptions opts,
         CancellationToken cancellationToken = default)
     {
+        LogManager.Use<DefaultFactory>().Level(LogLevel.Error);
+
         var config = Configure(opts);
         config.EnableInstallers();
         config.PurgeOnStartup(true);
