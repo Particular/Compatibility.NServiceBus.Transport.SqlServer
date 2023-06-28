@@ -67,15 +67,17 @@ class AgentPlugin
                 // https://learn.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets
                 // https://github.com/dotnet/docs/issues/15811
                 //
-                var commonReference = opts.RunningInMainRepo
+                var commonReference = opts.RunningInTransportRepo
                     ? $@"<PackageReference Include=""Compatibility.NServiceBus.Common"" Version=""{version}"" Private=""false"" ExcludeAssets=""runtime"" />"
                     : $@"<ProjectReference Include=""..\..\Common\Compatibility.NServiceBus.Common.csproj"" Private=""false"" ExcludeAssets=""runtime"" />";
 
-                var behaviorReference = opts.RunningInMainRepo
+                var behaviorReference = opts.RunningInTransportRepo
                     ? $@"<PackageReference Include=""{behaviorPackageName}"" Version=""{version}"" />"
                     : $@"<ProjectReference Include=""..\..\{behaviorPackageName}\{behaviorPackageName}.csproj"" />";
 
-                var transportReference = opts.VersionBeingDeveloped != null && SemanticVersion.Parse(opts.VersionBeingDeveloped).Equals(versionToTest)
+                var isDevelopment = opts.VersionBeingDeveloped != null && SemanticVersion.Parse(opts.VersionBeingDeveloped).Equals(versionToTest);
+
+                var transportReference = isDevelopment
                     ? $@"<ProjectReference Include=""..\..\{transportPackageName}\{transportPackageName}.csproj"" />"
                     : $@"<PackageReference Include=""{transportPackageName}"" Version=""{versionToTest.ToNormalizedString()}"" />";
 

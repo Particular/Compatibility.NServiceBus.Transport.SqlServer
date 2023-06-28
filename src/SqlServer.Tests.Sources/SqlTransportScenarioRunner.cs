@@ -44,8 +44,8 @@ static class SqlTransportScenarioRunner
                 ConnectionStrings = connectionStrings,
                 TestRunId = testRunId,
                 RunCount = runCount,
-                RunningInMainRepo = context.RunningInMainRepo,
                 VersionBeingDeveloped = GeneratedVersionsSet.VersionFilter?.ToNormalizedString()
+                RunningInTransportRepo = context.RunningInMainRepo,
             };
 
             await SqlHelper.DropTablesWithPrefix(Global.ConnectionString, opts.ApplyUniqueRunPrefix(string.Empty), cancellationToken).ConfigureAwait(false);

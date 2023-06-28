@@ -13,7 +13,7 @@ public class PluginOptions
     /// <summary>
     /// Should the test runner emit projects that use package references?
     /// </summary>
-    public bool RunningInMainRepo { get; set; }
+    public bool RunningInTransportRepo { get; set; }
 
     /// <summary>
     /// Transport connection strings
