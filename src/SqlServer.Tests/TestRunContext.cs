@@ -1,5 +1,5 @@
 ﻿public class TestRunContext : ITestRunContext
 {
-    public bool RunningInMainRepo => false;
+    public bool RunningInMainRepo => true;
 }
 
