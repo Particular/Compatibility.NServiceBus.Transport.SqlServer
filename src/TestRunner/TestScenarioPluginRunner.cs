@@ -53,7 +53,6 @@ public class TestScenarioPluginRunner
         {
             try
             {
-                Console.WriteLine($"Incoming audit message: {messageContext.NativeMessageId}");
                 if (messageContext.Headers.TryGetValue(nameof(opts.TestRunId), out var testRunIdHeader) &&
                     testRunIdHeader == opts.TestRunId)
                 {
