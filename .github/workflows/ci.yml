@@ -40,7 +40,7 @@ jobs:
           connection-string-env-var: SqlServerTransportConnectionString
           catalog: nservicebus
       - name: Prepare SQL Server
-        shell: pwsh       
+        shell: pwsh
         run: |
           echo "Create extra databases"
           sqlcmd -Q "CREATE DATABASE nservicebus1"
