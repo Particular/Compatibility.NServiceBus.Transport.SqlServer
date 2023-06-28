@@ -14,6 +14,17 @@ using NServiceBus.Transport;
 /// </summary>
 public class TestScenarioPluginRunner
 {
+    const string DefaultDirectory = ".wirecompattests";
+    static readonly string WireCompatPath = Path.Combine(FindSolutionFolderPath(), DefaultDirectory);
+
+    static TestScenarioPluginRunner()
+    {
+        if (Directory.Exists(WireCompatPath))
+        {
+            Directory.Delete(WireCompatPath, recursive: true);
+        }
+    }
+
     /// <summary>
     /// Runs the test
     /// </summary>
@@ -25,12 +36,10 @@ public class TestScenarioPluginRunner
         CancellationToken cancellationToken = default
         )
     {
-        var generatedFolderPath = FindGeneratedFolderPath();
-
         var processes = agents.Select(x => new AgentPlugin(
             x.Version,
             x.Behavior,
-            generatedFolderPath,
+            WireCompatPath,
             x.BehaviorParameters
             )).ToArray();
 
@@ -123,7 +132,7 @@ public class TestScenarioPluginRunner
         }
     }
 
-    static string FindGeneratedFolderPath()
+    static string FindSolutionFolderPath()
     {
         var directory = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -132,21 +141,12 @@ public class TestScenarioPluginRunner
             // Finding a solution file takes precedence
             if (Directory.EnumerateFiles(directory).Any(file => file.EndsWith(".sln")))
             {
-                return Path.Combine(directory, DefaultDirectory);
+                return directory;
             }
 
-            // When no solution file was found try to find a learning transport directory
-            var learningTransportDirectory = Path.Combine(directory, DefaultDirectory);
-            if (Directory.Exists(learningTransportDirectory))
-            {
-                return learningTransportDirectory;
-            }
-
-            var parent = Directory.GetParent(directory) ?? throw new Exception($"Unable to determine the storage directory path for the learning transport due to the absence of a solution file. Either create a '{DefaultDirectory}' directory in one of this project’s parent directories, or specify the path explicitly using the 'EndpointConfiguration.UseTransport<LearningTransport>().StorageDirectory()' API.");
+            var parent = Directory.GetParent(directory) ?? throw new Exception($"Unable to determine the solution directory path.");
 
             directory = parent.FullName;
         }
     }
-
-    const string DefaultDirectory = ".wirecompattests";
 }
