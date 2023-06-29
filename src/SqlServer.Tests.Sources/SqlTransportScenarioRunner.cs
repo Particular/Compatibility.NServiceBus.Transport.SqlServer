@@ -44,7 +44,7 @@ static class SqlTransportScenarioRunner
                 ConnectionStrings = connectionStrings,
                 TestRunId = testRunId,
                 RunCount = runCount,
-                VersionBeingDeveloped = GeneratedVersionsSet.VersionFilter?.ToNormalizedString()
+                VersionBeingDeveloped = GeneratedVersionsSet.VersionFilter?.ToNormalizedString(),
                 RunningInTransportRepo = context.RunningInMainRepo,
             };
 
