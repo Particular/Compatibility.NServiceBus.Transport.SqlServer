@@ -69,7 +69,7 @@ static partial class GeneratedVersionsSet
 
         // Get all minors
         var versions = versionSet
-            .Where(v => !v.IsPrerelease && versionRange.Satisfies(v))
+            .Where(v => (!v.IsPrerelease || v.Release.StartsWith("rc.") || v.Release.StartsWith("beta.") || v.Release.StartsWith("alpha.")) && versionRange.Satisfies(v))
             .OrderBy(v => v)
             .ToArray();
 
