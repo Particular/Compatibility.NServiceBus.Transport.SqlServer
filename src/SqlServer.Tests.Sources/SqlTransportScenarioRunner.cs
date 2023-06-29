@@ -28,8 +28,6 @@ static class SqlTransportScenarioRunner
         Dictionary<string, string> connectionStrings
         )
     {
-        var context = new TestRunContext();
-
         using var cts = new CancellationTokenSource(TestTimeout);
         var cancellationToken = cts.Token;
         var connectionString = Global.ConnectionString;
@@ -44,8 +42,7 @@ static class SqlTransportScenarioRunner
                 ConnectionStrings = connectionStrings,
                 TestRunId = testRunId,
                 RunCount = runCount,
-                VersionBeingDeveloped = GeneratedVersionsSet.VersionFilter?.ToNormalizedString(),
-                RunningInTransportRepo = context.RunningInMainRepo,
+                VersionBeingDeveloped = GeneratedVersionsSet.VersionFilter?.ToNormalizedString()
             };
 
             await SqlHelper.DropTablesWithPrefix(Global.ConnectionString, opts.ApplyUniqueRunPrefix(string.Empty), cancellationToken).ConfigureAwait(false);

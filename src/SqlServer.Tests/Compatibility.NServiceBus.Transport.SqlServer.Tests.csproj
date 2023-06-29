@@ -9,7 +9,6 @@
   <ItemGroup>
     <Compile Include="..\SqlServer.Tests.Sources\GeneratedVersionsSet.cs" Link="GeneratedVersionsSet.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\Global.cs" Link="Global.cs" />
-    <Compile Include="..\SqlServer.Tests.Sources\ITestRunContext.cs" Link="ITestRunContext.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\MultiCatalogMap.cs" Link="MultiCatalogMap.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\MultiSchemaMap.cs" Link="MultiSchemaMap.cs" />
     <Compile Include="..\SqlServer.Tests.Sources\ObjectPool.cs" Link="ObjectPool.cs" />
