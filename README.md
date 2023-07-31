@@ -30,7 +30,7 @@ The test project defines unit tests for the transport specific scenarios. These 
 
 ### Version permutation generator
 
-The versions are extracted from MyGet for a configured version range for a specific package where the range is expressed as a NuGet version range expression.
+The versions are extracted from Feedz.io for a configured version range for a specific package where the range is expressed as a NuGet version range expression.
 
     [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[5,)")]
 
