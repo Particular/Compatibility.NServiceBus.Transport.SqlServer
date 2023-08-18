@@ -11,7 +11,7 @@
     <ProjectReference Include="..\Core.V8\Core.V8.csproj" />
 
     <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.*" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.*" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
   </ItemGroup>
 
 </Project>
