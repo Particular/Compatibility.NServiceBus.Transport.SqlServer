@@ -24,8 +24,6 @@ updates:
     - dependency-name: "Microsoft.Build.Utilities.Core"
     - dependency-name: "Microsoft.CodeAnalysis.CSharp"
     - dependency-name: "Microsoft.CodeAnalysis.CSharp.Workspaces"
-    - dependency-name: "Microsoft.CodeAnalysis.CSharp.Workspaces"
-    - dependency-name: "Microsoft.CodeAnalysis.CSharp.Workspaces"
     - dependency-name: "NServiceBus"
       update-types: ["version-update:semver-major"]
     - dependency-name: "NServiceBus.AcceptanceTesting"
