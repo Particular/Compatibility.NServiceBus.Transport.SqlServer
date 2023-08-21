@@ -9,16 +9,25 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus;
 using NServiceBus.AcceptanceTesting.Customization;
+using NServiceBus.Logging;
 using NServiceBus.Transport;
 
+/// <summary>
+/// Base class for wire compatibility test behaviors
+/// </summary>
 public abstract class Plugin : IPlugin
 {
     IEndpointInstance instance;
 
+    /// <summary>
+    /// Starts the test endpoint.
+    /// </summary>
     public async Task StartEndpoint(
         PluginOptions opts,
         CancellationToken cancellationToken = default)
     {
+        LogManager.Use<DefaultFactory>().Level(LogLevel.Error);
+
         var config = Configure(opts);
         config.EnableInstallers();
         config.PurgeOnStartup(true);
@@ -57,9 +66,25 @@ public abstract class Plugin : IPlugin
         }
     }
 
+    /// <summary>
+    /// Invoked when the test is starting.
+    /// </summary>
     public Task StartTest(CancellationToken cancellationToken = default) => Execute(instance, cancellationToken);
+
+
+    /// <summary>
+    /// Invoked when the test is stopping.
+    /// </summary>
+    /// <returns></returns>
     public Task Stop(CancellationToken cancellationToken = default) => instance.Stop(cancellationToken);
 
+    /// <summary>
+    /// Override to provide test behavior logic.
+    /// </summary>
     protected virtual Task Execute(IEndpointInstance endpointInstance, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+    /// <summary>
+    /// Override to prepare the endpoint configuration.
+    /// </summary>
     protected abstract EndpointConfiguration Configure(PluginOptions opts);
 }

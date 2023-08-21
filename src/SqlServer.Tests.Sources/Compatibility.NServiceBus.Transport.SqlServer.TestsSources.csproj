@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <NoWarn>PS0018</NoWarn>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TestRunner\Compatibility.NServiceBus.TestRunner.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.Protocol" Version="6.6.1" />
+    <PackageReference Include="NUnit" Version="[3.13.3, 4.0.0)" />
+    <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="Particular.Packaging" Version="3.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>Compatibility.NServiceBus.Transport.SqlServer.TestsSources</PackageId>
+    <Description>Wire-compatibility tests sources for SQL Server</Description>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSourceFilesInPackage>true</IncludeSourceFilesInPackage>
+  </PropertyGroup>
+
+</Project>
