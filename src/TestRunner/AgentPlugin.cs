@@ -175,7 +175,7 @@ class AgentPlugin
         buildProcess.StartInfo.FileName = fileName;
         buildProcess.StartInfo.Arguments = arguments;
 #if !DEBUG
-            buildProcess.StartInfo.Arguments += " --configuration Release";
+        buildProcess.StartInfo.Arguments += " --configuration Release";
 #endif
         buildProcess.StartInfo.UseShellExecute = false;
         buildProcess.StartInfo.RedirectStandardOutput = true;
