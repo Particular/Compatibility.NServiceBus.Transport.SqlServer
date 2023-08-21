@@ -1,0 +1,2 @@
+exclusions:
+- .github/dependabot.yml
