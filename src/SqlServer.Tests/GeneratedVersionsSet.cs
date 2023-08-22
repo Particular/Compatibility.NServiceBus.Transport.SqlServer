@@ -13,7 +13,7 @@ static class GeneratedVersionsSet
         var versionRange = VersionRange.Parse(range);
         using var cache = new SourceCacheContext { NoCache = true };
 
-        string source = "https://www.myget.org/F/particular/api/v3/index.json";
+        string source = "https://f.feedz.io/particular-software/packages/nuget/index.json";
         var nuget = Repository.Factory.GetCoreV3(source);
         var resources = nuget.GetResource<FindPackageByIdResource>();
 
