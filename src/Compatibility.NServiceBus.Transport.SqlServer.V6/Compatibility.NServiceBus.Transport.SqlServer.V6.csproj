@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.*" PrivateAssets="All" /><!--DO NOT BUMP VERSION -->
+    <PackageReference Include="NServiceBus.Transport.SqlServer" Version="6.*" PrivateAssets="All" /><!--DO NOT BUMP VERSION -->
   </ItemGroup>
 
   <ItemGroup>
