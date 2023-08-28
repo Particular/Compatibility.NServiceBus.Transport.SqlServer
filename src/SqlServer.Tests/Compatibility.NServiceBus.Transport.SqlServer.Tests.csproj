@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -29,7 +29,7 @@
     <PackageReference Include="NuGet.Protocol" Version="6.7.0" />
     <PackageReference Include="NUnit" Version="[3.13.3, 4.0.0)" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" PrivateAssets="All" />
-    <PackageReference Include="GitHubActionsTestLogger" Version="2.3.2" PrivateAssets="All" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="2.3.3" PrivateAssets="All" />
     <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.0.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
