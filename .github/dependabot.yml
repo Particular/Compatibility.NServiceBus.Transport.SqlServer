@@ -19,13 +19,9 @@ updates:
     - dependency-name: "Microsoft.CodeAnalysis.CSharp.Workspaces"
     # Avoids dependabot to create PR's to update wildcard majors as the project files target a specific major of these packages
     - dependency-name: "NServiceBus"
-      update-types: ["version-update:semver-major"]  
     - dependency-name: "NServiceBus.AcceptanceTesting"
-      update-types: ["version-update:semver-major"]
     - dependency-name: "NServiceBus.SqlServer"
-      update-types: ["version-update:semver-major"]
     - dependency-name: "NServiceBus.Transport.SqlServer"
-      update-types: ["version-update:semver-major"]
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
