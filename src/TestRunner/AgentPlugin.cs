@@ -25,9 +25,7 @@ class AgentPlugin
 
     PluginLoadContext pluginLoadContext;
 
-#if NET7_0
-    const string TargetFramework = "net7.0";
-#endif
+    const string TargetFramework = "net8.0";
 
     public AgentPlugin(
         SemanticVersion versionToTest,
