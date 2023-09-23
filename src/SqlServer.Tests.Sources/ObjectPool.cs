@@ -9,7 +9,7 @@ class ObjectPool<T>
     public ObjectPool(Func<T> objectGenerator)
     {
         _objectGenerator = objectGenerator ?? throw new ArgumentNullException(nameof(objectGenerator));
-        _objects = new ConcurrentBag<T>();
+        _objects = [];
     }
 
     public T Get() => _objects.TryTake(out T item) ? item : _objectGenerator();
