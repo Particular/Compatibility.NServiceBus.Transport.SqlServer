@@ -8,10 +8,15 @@ using System.Threading;
 using System.Diagnostics;
 using NuGet.Versioning;
 using System.Xml.Linq;
+using AsyncKeyedLock;
 
 class AgentPlugin
 {
-    static readonly AsyncDuplicateLock Locks = new AsyncDuplicateLock();
+    static readonly AsyncKeyedLocker<string> Locks = new(o =>
+    {
+        o.PoolSize = 20;
+        o.PoolInitialFill = 1;
+    });
 
     readonly string projectName;
     readonly string behaviorTypeName;
@@ -46,9 +51,7 @@ class AgentPlugin
 
     public async Task Compile(CancellationToken cancellationToken = default)
     {
-        var disposable = await Locks.LockAsync(projectName, cancellationToken).ConfigureAwait(false);
-
-        using (disposable)
+        using (await Locks.LockAsync(projectName, cancellationToken).ConfigureAwait(false))
         {
             var projectFolder = Path.Combine(generatedProjectFolder, projectName);
             if (!Directory.Exists(projectFolder))
