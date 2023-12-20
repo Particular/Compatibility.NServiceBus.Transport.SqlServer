@@ -30,7 +30,10 @@ class AgentPlugin
 
     PluginLoadContext pluginLoadContext;
 
+    #if NET8_0
+    // Update preprocessor and string when updating to next .NET version. Ensures build will fail when there is a mismatch
     const string TargetFramework = "net8.0";
+    #endif
 
     public AgentPlugin(
         SemanticVersion versionToTest,
