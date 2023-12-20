@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if !NOFILTER
+#define FILTER
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -19,22 +23,16 @@ static partial class GeneratedVersionsSet
     internal static NuGetVersion VersionFilter;
 
     [ModuleInitializer]
+    [Conditional("FILTER")]
     public static void SetVersionFilter()
     {
-        const string DefaultVersionTextWithoutCommitInfo = "1.0.0";
-
         var versionText = Assembly
             .GetExecutingAssembly()
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             .InformationalVersion;
 
-        Trace.WriteLine($"versionText: {versionText}");
-
-        if (versionText.StartsWith(DefaultVersionTextWithoutCommitInfo))
-        {
-            var version = NuGetVersion.Parse(versionText);
-            VersionFilter = version;
-        }
+        var version = NuGetVersion.Parse(versionText);
+        VersionFilter = version;
     }
 
     static GeneratedVersionsSet()
