@@ -31,8 +31,11 @@ static partial class GeneratedVersionsSet
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             .InformationalVersion;
 
-        var version = NuGetVersion.Parse(versionText);
-        VersionFilter = version;
+        if (versionText != DefaultVersionTextWithoutCommitInfo)
+        {
+            var version = NuGetVersion.Parse(versionText);
+            VersionFilter = version;
+        }
     }
 
     static GeneratedVersionsSet()
