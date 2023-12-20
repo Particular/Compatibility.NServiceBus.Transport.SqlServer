@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -28,6 +29,7 @@ static partial class GeneratedVersionsSet
             .InformationalVersion;
 
         if (versionText != DefaultVersionTextWithoutCommitInfo)
+        Trace.WriteLine($"versionText: {versionText}");
         {
             var version = NuGetVersion.Parse(versionText);
             VersionFilter = version;
@@ -101,10 +103,12 @@ static partial class GeneratedVersionsSet
 
         if (VersionFilter != null)
         {
+            Trace.WriteLine($" Filter: {versionRange} {VersionFilter}");
             if (versionRange.Satisfies(VersionFilter))
             {
                 foreach (var a in latestMinors)
                 {
+                    Trace.WriteLine($" yield {VersionFilter} {a}");
                     yield return new object[] { VersionFilter, a };
                 }
             }
@@ -118,6 +122,7 @@ static partial class GeneratedVersionsSet
                     var isMatch = VersionFilter is null || IsMinorMatch(VersionFilter, a) || IsMinorMatch(VersionFilter, b);
                     if (isMatch)
                     {
+                        Trace.WriteLine($" yield {a} {b}");
                         yield return new object[] { a, b };
                     }
                 }
