@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-class ObjectPool<T>
+class ObjectPool<T>(Func<T> objectGenerator)
 {
-    readonly ConcurrentBag<T> _objects;
-    readonly Func<T> _objectGenerator;
-
-    public ObjectPool(Func<T> objectGenerator)
-    {
-        _objectGenerator = objectGenerator ?? throw new ArgumentNullException(nameof(objectGenerator));
-        _objects = [];
-    }
+    readonly ConcurrentBag<T> _objects = [];
+    readonly Func<T> _objectGenerator = objectGenerator ?? throw new ArgumentNullException(nameof(objectGenerator));
 
     public T Get() => _objects.TryTake(out T item) ? item : _objectGenerator();
 

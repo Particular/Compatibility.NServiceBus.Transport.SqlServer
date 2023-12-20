@@ -17,8 +17,8 @@ sealed class PluginLoadContext : AssemblyLoadContext
     readonly AssemblyDependencyResolver resolver;
 
     // https://learn.microsoft.com/en-us/dotnet/standard/net-standard
-    static readonly string[] Frameworks = new[]
-    {
+    static readonly string[] Frameworks =
+    [
 #if NET8_0_OR_GREATER
         "net8.0",
 #endif
@@ -45,7 +45,7 @@ sealed class PluginLoadContext : AssemblyLoadContext
         "netcoreapp2.0",
         "netstandard2.0",
 #endif        
-    };
+    ];
 
     public PluginLoadContext(string pluginPath)
     {

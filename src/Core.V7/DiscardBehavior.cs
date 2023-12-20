@@ -3,14 +3,9 @@ using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Pipeline;
 
-class DiscardBehavior : IBehavior<IIncomingPhysicalMessageContext, IIncomingPhysicalMessageContext>
+class DiscardBehavior(string testRunId) : IBehavior<IIncomingPhysicalMessageContext, IIncomingPhysicalMessageContext>
 {
-    readonly string TestRunId;
-
-    public DiscardBehavior(string testRunId)
-    {
-        TestRunId = testRunId;
-    }
+    readonly string TestRunId = testRunId;
 
     public Task Invoke(IIncomingPhysicalMessageContext context, Func<IIncomingPhysicalMessageContext, Task> next)
     {

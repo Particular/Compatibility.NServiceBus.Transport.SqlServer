@@ -41,11 +41,11 @@ if not exists (select  *
 if(db_id('{database}') is null)
     create database [{database}]
 ";
-        await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        _ = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
     }
     public static async Task DropTableIfExists(string connectionString, string tableName, string schema = "dbo", CancellationToken cancellationToken = default)
     {
-        await ExecuteSql(connectionString, $"DROP TABLE IF EXISTS [{schema}].[{tableName}]", cancellationToken).ConfigureAwait(false);
+        _ = await ExecuteSql(connectionString, $"DROP TABLE IF EXISTS [{schema}].[{tableName}]", cancellationToken).ConfigureAwait(false);
     }
 
     public static async Task DropTablesWithPrefix(string connectionString, string prefix, CancellationToken cancellationToken = default)
@@ -67,6 +67,6 @@ END
 CLOSE cmds;
 DEALLOCATE cmds";
 
-        await ExecuteSql(connectionString, sql, cancellationToken).ConfigureAwait(false);
+        _ = await ExecuteSql(connectionString, sql, cancellationToken).ConfigureAwait(false);
     }
 }

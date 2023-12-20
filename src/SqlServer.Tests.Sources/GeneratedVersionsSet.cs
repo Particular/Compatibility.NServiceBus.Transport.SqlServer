@@ -88,17 +88,17 @@ static partial class GeneratedVersionsSet
 
             if (last.Major != v.Major)
             {
-                latestMinors.Add(last);
+                _ = latestMinors.Add(last);
             }
             else if (last.Minor != v.Minor)
             {
-                latestMinors.Add(last);
+                _ = latestMinors.Add(last);
             }
 
             last = v;
         }
 
-        latestMinors.Add(last);
+        _ = latestMinors.Add(last);
 
         if (VersionFilter != null)
         {
@@ -129,9 +129,5 @@ static partial class GeneratedVersionsSet
         }
     }
 
-    static bool IsMinorMatch(NuGetVersion a, NuGetVersion b)
-    {
-        return a.Major == b.Major && a.Minor == b.Minor;
-    }
-
+    static bool IsMinorMatch(NuGetVersion a, NuGetVersion b) => a.Major == b.Major && a.Minor == b.Minor;
 }

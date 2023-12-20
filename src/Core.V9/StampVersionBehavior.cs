@@ -7,7 +7,7 @@ using NServiceBus.Transport;
 
 class StampVersionBehavior : Behavior<IOutgoingPhysicalMessageContext>
 {
-    string versionString;
+    readonly string versionString;
 
     public StampVersionBehavior(IMessageDispatcher dispatcher)
     {

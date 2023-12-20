@@ -10,7 +10,7 @@ using NServiceBus.Compatibility;
 
 class MessageDrivenPublisher : Base
 {
-    TaskCompletionSource<bool> subscribed = new();
+    readonly TaskCompletionSource<bool> subscribed = new();
 
     protected override void Configure(
         PluginOptions opts,

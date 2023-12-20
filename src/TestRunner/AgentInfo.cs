@@ -31,7 +31,7 @@ public class AgentInfo
         PluginOptions opts
         )
     {
-        return new AgentInfo
+        return new()
         {
             Behavior = behavior,
             Version = version,
