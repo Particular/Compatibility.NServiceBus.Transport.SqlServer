@@ -28,8 +28,9 @@ static partial class GeneratedVersionsSet
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             .InformationalVersion;
 
-        if (versionText != DefaultVersionTextWithoutCommitInfo)
         Trace.WriteLine($"versionText: {versionText}");
+
+        if (versionText.StartsWith(DefaultVersionTextWithoutCommitInfo))
         {
             var version = NuGetVersion.Parse(versionText);
             VersionFilter = version;
