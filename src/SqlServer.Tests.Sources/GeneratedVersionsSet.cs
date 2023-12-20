@@ -26,12 +26,16 @@ static partial class GeneratedVersionsSet
     [Conditional("FILTER")]
     public static void SetVersionFilter()
     {
+        const string DefaultVersionTextWithoutCommitInfo = "1.0.0";
+
         var versionText = Assembly
             .GetExecutingAssembly()
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             .InformationalVersion;
 
-        if (versionText != DefaultVersionTextWithoutCommitInfo)
+        Trace.WriteLine($"versionText: {versionText}");
+
+        if (versionText.StartsWith(DefaultVersionTextWithoutCommitInfo))
         {
             var version = NuGetVersion.Parse(versionText);
             VersionFilter = version;
