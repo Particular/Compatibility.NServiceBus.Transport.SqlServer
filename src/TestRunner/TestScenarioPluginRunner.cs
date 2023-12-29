@@ -110,7 +110,8 @@ public class TestScenarioPluginRunner
 
             await Task.WhenAll(tests).ConfigureAwait(false);
 
-            await done.Task.ConfigureAwait(false);
+            var delay = Task.Delay(-1, cancellationToken);
+            await Task.WhenAny(done.Task, delay).ConfigureAwait(false);
 
             return new TestExecutionResult
             {
