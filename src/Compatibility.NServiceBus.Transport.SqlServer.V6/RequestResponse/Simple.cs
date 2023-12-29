@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using NServiceBus;
@@ -24,6 +25,7 @@ class Sender : Base
         }
         catch (Exception ex)
         {
+            Trace.WriteLine("FAIL!" + ex);
             Console.WriteLine("FAIL!" + ex);
             throw;
         }

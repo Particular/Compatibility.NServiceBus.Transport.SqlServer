@@ -110,6 +110,7 @@ class AgentPlugin
             }
             catch (Exception e) when (e is OperationCanceledException && !cancellationToken.IsCancellationRequested)
             {
+                Trace.WriteLine($"Build failed for {projectFilePath}, adding to solution for diagnosis");
                 Console.WriteLine($"Build failed for {projectFilePath}, adding to solution for diagnosis");
                 await AddProjectToSolution(projectFilePath, cancellationToken).ConfigureAwait(false);
             }
@@ -143,6 +144,7 @@ class AgentPlugin
         if (process.ExitCode != 0)
         {
             var buildOutput = await process.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+            Trace.WriteLine(buildOutput);
             await Console.Out.WriteLineAsync(buildOutput).ConfigureAwait(false);
             throw new Exception("Build failed");
         }
@@ -155,6 +157,7 @@ class AgentPlugin
 
         if (!File.Exists(slnPath))
         {
+            Trace.WriteLine("Not running as part of Compatibility.SqlServer.sln, skip adding");
             Console.WriteLine("Not running as part of Compatibility.SqlServer.sln, skip adding");
             return;
         }
@@ -164,6 +167,7 @@ class AgentPlugin
         if (process.ExitCode != 0)
         {
             var buildOutput = await process.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+            Trace.WriteLine(buildOutput);
             await Console.Out.WriteLineAsync(buildOutput).ConfigureAwait(false);
             throw new Exception("dotnet sln add failed");
         }

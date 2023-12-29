@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NServiceBus.Raw;
 using System.IO;
 using NServiceBus.Transport;
+using System.Diagnostics;
 
 /// <summary>
 /// Wire compatibility test runner
@@ -71,6 +72,7 @@ public class TestScenarioPluginRunner
             }
             catch (Exception ex)
             {
+                Trace.WriteLine("\n===== ERROR: =====\n" + ex);
                 Console.WriteLine("\n===== ERROR: =====\n" + ex);
                 done.SetResult(false);
                 throw;

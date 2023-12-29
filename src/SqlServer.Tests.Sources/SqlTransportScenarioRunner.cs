@@ -17,6 +17,8 @@ static class SqlTransportScenarioRunner
     static SqlTransportScenarioRunner()
     {
         LogManager.Use<DefaultFactory>().Level(LogLevel.Error);
+
+        AppDomain.CurrentDomain.FirstChanceException += (s, ea) => Trace.WriteLine($"FirstChanceException: {ea.Exception}");
     }
 
     public static async Task<TestExecutionResult> Run(
