@@ -12,6 +12,7 @@ public class PubSubMessageDriven
 {
     [Test]
     [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[4,6)")]
+    [Ignore("Versions before 6 are incompatible with .NET 8 and System.Data.SqlClient")]
     public async Task Simple(NuGetVersion publisherVersion, NuGetVersion subscriberVersion)
     {
         var connectionStrings = new Dictionary<string, string>()

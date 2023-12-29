@@ -22,6 +22,11 @@ public class RequestResponse
     [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[4,)")]
     public async Task SingleSchema(NuGetVersion senderVersion, NuGetVersion receiverVersion)
     {
+        if (senderVersion.Major < 6 || receiverVersion.Major < 6)
+        {
+            Assert.Ignore("Versions before 6 are incompatible with .NET 8 and System.Data.SqlClient");
+        }
+
         var connectionStrings = new Dictionary<string, string>()
         {
             ["Sender"] = Global.ConnectionString + $";App=Sender",

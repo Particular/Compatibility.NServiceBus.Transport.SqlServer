@@ -15,6 +15,11 @@ public class PubSubNative
     [TestCaseSourcePackageSupportedVersions("NServiceBus.SqlServer", "[5,)")]
     public async Task Simple(NuGetVersion subscriberVersion, NuGetVersion publisherVersion)
     {
+        if (subscriberVersion.Major < 6 || publisherVersion.Major < 6)
+        {
+            Assert.Ignore("Versions before 6 are incompatible with .NET 8 and System.Data.SqlClient");
+        }
+
         var connectionStrings = new Dictionary<string, string>()
         {
             ["Publisher"] = Global.ConnectionString + $";App=Publisher",
