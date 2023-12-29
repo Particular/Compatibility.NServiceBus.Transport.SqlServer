@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AsyncKeyedLock" Version="6.2.4" />
     <PackageReference Include="NServiceBus.Raw" Version="4.0.0" />
     <PackageReference Include="NuGet.Versioning" Version="6.8.0" />
   </ItemGroup>
