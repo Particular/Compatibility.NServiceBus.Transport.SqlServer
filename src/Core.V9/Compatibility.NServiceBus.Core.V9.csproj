@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="9.0.0-alpha.6" /><!--DO NOT BUMP VERSION -->
-    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="9.0.0-alpha.6" /><!--DO NOT BUMP VERSION -->
+    <PackageReference Include="NServiceBus" Version="9.0.0-alpha.*" /><!--DO NOT BUMP VERSION -->
+    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="9.0.0-alpha.*" /><!--DO NOT BUMP VERSION -->
   </ItemGroup>
 
   <ItemGroup>
