@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <NoWarn>PS0018</NoWarn>
     <AssemblyName>Compatibility.NServiceBus.SqlServer.Tests</AssemblyName>
+    <DefineConstants>NOFILTER</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

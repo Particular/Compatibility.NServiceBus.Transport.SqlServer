@@ -1,5 +1,10 @@
-﻿using System;
+﻿#if !NOFILTER
+#define FILTER
+#endif
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -18,20 +23,16 @@ static partial class GeneratedVersionsSet
     internal static NuGetVersion VersionFilter;
 
     [ModuleInitializer]
+    [Conditional("FILTER")]
     public static void SetVersionFilter()
     {
-        const string DefaultVersionTextWithoutCommitInfo = "1.0.0";
-
         var versionText = Assembly
             .GetExecutingAssembly()
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             .InformationalVersion;
 
-        if (versionText != DefaultVersionTextWithoutCommitInfo)
-        {
-            var version = NuGetVersion.Parse(versionText);
-            VersionFilter = version;
-        }
+        var version = NuGetVersion.Parse(versionText);
+        VersionFilter = version;
     }
 
     static GeneratedVersionsSet()
@@ -101,10 +102,12 @@ static partial class GeneratedVersionsSet
 
         if (VersionFilter != null)
         {
+            Trace.WriteLine($" Filter: {versionRange} {VersionFilter}");
             if (versionRange.Satisfies(VersionFilter))
             {
                 foreach (var a in latestMinors)
                 {
+                    Trace.WriteLine($" yield {VersionFilter} {a}");
                     yield return new object[] { VersionFilter, a };
                 }
             }
@@ -118,6 +121,7 @@ static partial class GeneratedVersionsSet
                     var isMatch = VersionFilter is null || IsMinorMatch(VersionFilter, a) || IsMinorMatch(VersionFilter, b);
                     if (isMatch)
                     {
+                        Trace.WriteLine($" yield {a} {b}");
                         yield return new object[] { a, b };
                     }
                 }
