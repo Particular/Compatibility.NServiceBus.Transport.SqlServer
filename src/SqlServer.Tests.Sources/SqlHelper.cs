@@ -1,6 +1,6 @@
-﻿using System.Data.SqlClient;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 static class SqlHelper
 {
@@ -53,7 +53,7 @@ if(db_id('{database}') is null)
         var sql = @$"
 DECLARE @cmd varchar(4000)
 DECLARE cmds CURSOR FOR
-SELECT 'DROP TABLE [' + TABLE_SCHEMA +'].[' + TABLE_NAME + ']' 
+SELECT 'DROP TABLE [' + TABLE_SCHEMA +'].[' + TABLE_NAME + ']'
 FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_NAME LIKE '{prefix}%'
 
